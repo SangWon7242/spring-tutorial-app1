@@ -19,7 +19,7 @@ public class QGenFile extends EntityPathBase<GenFile> {
 
     public static final QGenFile genFile = new QGenFile("genFile");
 
-    public final com.sbs.tutorial.base.entity.QBaseEntity _super = new com.sbs.tutorial.base.entity.QBaseEntity(this);
+    public final com.sbs.tutorial.app1.base.entity.QBaseEntity _super = new com.sbs.tutorial.app1.base.entity.QBaseEntity(this);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;

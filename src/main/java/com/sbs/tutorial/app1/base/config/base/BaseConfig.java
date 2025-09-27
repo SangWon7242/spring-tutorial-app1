@@ -1,4 +1,4 @@
-package com.sbs.tutorial.base.config.base;
+package com.sbs.tutorial.app1.base.config.base;
 
 
 import com.querydsl.jpa.impl.JPAQueryFactory;

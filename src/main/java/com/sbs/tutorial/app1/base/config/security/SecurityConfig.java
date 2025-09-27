@@ -1,4 +1,4 @@
-package com.sbs.tutorial.base.config.security;
+package com.sbs.tutorial.app1.base.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

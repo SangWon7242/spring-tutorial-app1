@@ -1,4 +1,4 @@
-package com.sbs.tutorial.base.entity;
+package com.sbs.tutorial.app1.base.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
