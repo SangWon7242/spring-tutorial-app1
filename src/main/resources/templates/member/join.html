@@ -3,7 +3,71 @@
 
 <h1 class="text-2xl font-bold">회원 가입</h1>
 
-<form th:action method="POST" enctype="multipart/form-data">
+<script>
+  function JoinForm__submit(form) {
+    form.username.value = form.username.value.trim();
+    if(form.username.value.length === 0) {
+      alert("아이디를 입력해주세요.");
+      form.username.focus();
+      return;
+    }
+
+    form.password.value = form.password.value.trim();
+    if(form.password.value.length === 0) {
+      alert("비밀번호를 입력해주세요.");
+      form.password.focus();
+      return;
+    }
+
+    form.passwordConfirm.value = form.passwordConfirm.value.trim();
+    if(form.passwordConfirm.value.length === 0) {
+      alert("비밀번호 확인을 입력해주세요.");
+      form.passwordConfirm.focus();
+      return;
+    }
+
+    form.email.value = form.email.value.trim();
+    if(form.email.value.length === 0) {
+      alert("이메일을 입력해주세요.");
+      form.email.focus();
+      return;
+    }
+
+    // 파일 업로드 유효성 검사
+    const profileImgFile = form.profileImg.files[0];
+
+    // 파일이 선택되었는지 확인 (선택사항이므로 필수는 아님)
+    if (profileImgFile) {
+      // 파일 크기 검사 (5MB 제한)
+      const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (profileImgFile.size > maxFileSize) {
+        alert("프로필 이미지 파일 크기는 5MB 이하여야 합니다.");
+        form.profileImg.focus();
+        return;
+      }
+
+      // 파일 형식 검사
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(profileImgFile.type)) {
+        alert("프로필 이미지는 JPEG, JPG, PNG, GIF, WEBP 형식만 업로드 가능합니다.");
+        form.profileImg.focus();
+        return;
+      }
+
+      // 파일명 길이 검사
+      if (profileImgFile.name.length > 255) {
+        alert("파일명이 너무 깁니다. 255자 이하의 파일명을 사용해주세요.");
+        form.profileImg.focus();
+        return;
+      }
+    }
+
+    // 모든 유효성 검사를 통과하면 폼 제출
+    form.submit();
+  }
+</script>
+
+<form th:action method="POST" enctype="multipart/form-data" onsubmit="JoinForm__submit(this); return false;">
   <fieldset class="fieldset">
     <legend class="fieldset-legend">아이디</legend>
     <label class="input validator">
@@ -21,17 +85,14 @@
       </svg>
       <input
           type="text"
-          placeholder="아이디를 입력해주세요."
           required
-          pattern="[A-Za-z][A-Za-z0-9\-]*"
-          minlength="3"
-          maxlength="30"
+          placeholder="아이디를 입력해주세요."
           title="input username"
           name="username"
       />
     </label>
     <p class="validator-hint hidden">
-      아이디를 다시 입력해주세요.
+      아이디를 확인 후 입력해주세요.
     </p>
   </fieldset>
   <fieldset class="fieldset">
@@ -54,9 +115,7 @@
       <input
           type="password"
           required
-          placeholder="Password"
-          minlength="8"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+          placeholder="비밀번호를 입력해주세요."
           title="input password"
           name="password"
       />
@@ -85,9 +144,7 @@
       <input
           type="password"
           required
-          placeholder="Password"
-          minlength="8"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+          placeholder="비밀번호 확인을 입력해주세요."
           title="input passwordConfirm"
           name="passwordConfirm"
       />
@@ -116,8 +173,8 @@
     <div class="validator-hint hidden">이메일을 확인 후 입력해주세요.</div>
   </fieldset>
   <fieldset class="fieldset">
-    <legend class="fieldset-legend">파일을 선택해주세요.</legend>
-    <input type="file" class="file-input" name="img1" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+    <legend class="fieldset-legend">프로필 이미지</legend>
+    <input type="file" class="file-input" name="profileImg" required accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
   </fieldset>
   <div>
     <button type="submit" class="btn btn-neutral">회원가입</button>
