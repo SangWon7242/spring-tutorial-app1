@@ -3,14 +3,19 @@ package com.sbs.tutorial.app1.domain.member.controller;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.form.MemberJoinForm;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,33 +29,32 @@ public class MemberController {
   }
 
   @PostMapping("/join")
-  public String join(MemberJoinForm memberJoinForm, HttpSession session) {
+  public String join(MemberJoinForm memberJoinForm, HttpServletRequest req) {
     String username = memberJoinForm.getUsername();
+    String password = memberJoinForm.getPassword();
 
     Member oldMember = memberService.getMemberByUsername(username);
 
     if(oldMember != null) {
       return "redirect:/?errorMsg=Already exists username";
     }
-    
+
     Member member = memberService.join(memberJoinForm);
 
-    session.setAttribute("loginedMemberId", member.getId());
+    try {
+      req.login(username, password); // 로그인 처리
+      System.out.println("로그인 성공");
+    } catch (ServletException e) {
+      throw new RuntimeException(e);
+    }
 
     return "redirect:/member/profile";
   }
 
   @GetMapping("/profile")
-  public String showProfile(HttpSession session, Model model) {
-    Long loginedMemberId = (Long) session.getAttribute("loginedMemberId");
-
-    boolean isLogined = loginedMemberId != null;
-
-    if(!isLogined) {
-      return "redirect:/?errorMsg=Need to login!";
-    }
-
-    Member member = memberService.getMemberById(loginedMemberId);
+  @PreAuthorize("isAuthenticated()")
+  public String showProfile(Principal principal, Model model) {
+    Member member = memberService.getMemberByUsername(principal.getName());
 
     model.addAttribute("member", member);
 
