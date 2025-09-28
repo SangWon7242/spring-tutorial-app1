@@ -3,8 +3,18 @@
 
 <h1 class="text-2xl font-bold">마이페이지</h1>
 
-<div class="avatar avatar-online avatar-placeholder">
-  <div class="bg-neutral text-neutral-content w-16 rounded-full">
-    <span class="text-xl" th:text="${member.username}"></span>
+<div class="flex gap-2">
+  <div class="avatar avatar-online avatar-placeholder">
+    <div class="bg-neutral text-neutral-content w-16 rounded-full">
+      <img class="profile-img" th:src="@{|/gen/${member.profileImg}|}" alt="">
+    </div>
+  </div>
+  <div>
+    <div>
+      <span class="text-xl" th:text="|아이디 : ${member.username}|"></span>
+    </div>
+    <div>
+      <span class="text-xl" th:text="|이메일 : ${member.email}|"></span>
+    </div>
   </div>
 </div>
