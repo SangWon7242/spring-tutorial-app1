@@ -89,4 +89,21 @@ public class MemberService implements UserDetailsService {
 
     return new User(member.getUsername(), member.getPassword(), authorities);
   }
+
+  public Member join(String username, String password, String email) {
+    Member member = Member.builder()
+        .username(username)
+        .password(password)
+        .email(email)
+        .build();
+
+    memberRepository.save(member);
+
+    return member;
+  }
+
+  // SELECT COUNT(*) FROM `member`;
+  public long count() {
+    return memberRepository.count();
+  }
 }

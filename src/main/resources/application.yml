@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev, base-addi
+    active: test
   output:
     ansi:
       enabled: always
