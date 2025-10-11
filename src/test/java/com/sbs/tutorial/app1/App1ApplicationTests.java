@@ -146,16 +146,19 @@ class App1ApplicationTests {
     );
     
     // 회원가입(MVC MOCK)
-//    mvc.perform(multipart("/member/join")
-//            .file(profileImage)
-//            .param("username", "user5")
-//            .param("password", "1234")
-//            .param("email", "user5@test.com")
-//            .characterEncoding("UTF-8").with(csrf()))
-//        .andExpect(status().is3xxRedirection())
-//        .andExpect(redirectedUrl("/member/profile"))
-//        .andDo(print());
+    // v1
+    mvc.perform(multipart("/member/join")
+            .file(profileImage)
+            .param("username", "user5")
+            .param("password", "1234")
+            .param("email", "user5@test.com")
+            .characterEncoding("UTF-8").with(csrf()))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/member/profile"))
+        .andDo(print());
 
+    /*
+    // v2
     ResultActions resultActions = mvc.perform(multipart("/member/join")
             .file(profileImage)
             .param("username", "user5")
@@ -166,6 +169,7 @@ class App1ApplicationTests {
     resultActions
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/member/profile"));
+     */
 
     // 5번 회원이 생성, 테스트
     Member member = memberService.getMemberByUsername("user5")
@@ -175,5 +179,7 @@ class App1ApplicationTests {
     assertThat(member.getId()).isEqualTo(5L);
     assertThat(member.getUsername()).isEqualTo("user5");
     assertThat(member.getEmail()).isEqualTo("user5@test.com");
+
+    memberService.removeProfileImg(member);
   }
 }
