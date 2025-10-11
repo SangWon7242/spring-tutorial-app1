@@ -2,6 +2,8 @@ package com.sbs.tutorial.app1;
 
 import com.sbs.tutorial.app1.domain.home.controller.HomeController;
 import com.sbs.tutorial.app1.domain.member.controller.MemberController;
+import com.sbs.tutorial.app1.domain.member.entity.Member;
+import com.sbs.tutorial.app1.domain.member.repository.MemberRepository;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -9,15 +11,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,6 +43,9 @@ class App1ApplicationTests {
 
   @Autowired
   private MemberService memberService;
+
+  @Autowired
+  private MemberRepository memberRepository;
 
   @Test
   @DisplayName("메인화면에서는 안녕이 나와야 한다.")
@@ -101,5 +113,67 @@ class App1ApplicationTests {
         .andExpect(handler().handlerType(MemberController.class))
         .andExpect(handler().methodName("showProfile")) // 메서드명 확인
         .andExpect(content().string(containsString("user4@test.com"))); // 내용 확인
+  }
+
+  @Test
+  @DisplayName("회원가입")
+  @Rollback(false)
+  void t05() throws Exception {
+    // 파일 다운로드
+    // 다운 받아야 하는 이미지 파일 : "https://picsum.photos/200/300"
+    // 이미지 파일명 : "test-image.jpg"
+
+    String imageUrl = "https://picsum.photos/200/300";
+    String originalFileName = "test-image.jpg";
+
+    // URL에서 이미지 다운로드
+    byte[] imageBytes;
+    try {
+      URL url = new URL(imageUrl);
+      imageBytes = url.openStream().readAllBytes();
+      // url.openStream() : 인터넷에 연결해서 url 데이터의 접근
+      // 이미지 파일의 모든 데이터가 byte[]로 저장
+    } catch (IOException e) {
+      // 오류 발생시 기본 테스트 데이터 사용
+      imageBytes =  "test image content".getBytes();
+    }
+
+    MockMultipartFile profileImage = new MockMultipartFile(
+        "profileImage",
+        originalFileName,
+        "image/jpeg",
+        imageBytes
+    );
+    
+    // 회원가입(MVC MOCK)
+//    mvc.perform(multipart("/member/join")
+//            .file(profileImage)
+//            .param("username", "user5")
+//            .param("password", "1234")
+//            .param("email", "user5@test.com")
+//            .characterEncoding("UTF-8").with(csrf()))
+//        .andExpect(status().is3xxRedirection())
+//        .andExpect(redirectedUrl("/member/profile"))
+//        .andDo(print());
+
+    ResultActions resultActions = mvc.perform(multipart("/member/join")
+            .file(profileImage)
+            .param("username", "user5")
+            .param("password", "1234")
+            .param("email", "user5@test.com")
+            .characterEncoding("UTF-8")).andDo(print());
+
+    resultActions
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/member/profile"));
+
+    // 5번 회원이 생성, 테스트
+    Member member = memberService.getMemberByUsername("user5")
+        .orElseThrow(() -> new AssertionError("5번 회원이 존재하지 않습니다"));
+
+    assertThat(member).isNotNull();
+    assertThat(member.getId()).isEqualTo(5L);
+    assertThat(member.getUsername()).isEqualTo("user5");
+    assertThat(member.getEmail()).isEqualTo("user5@test.com");
   }
 }

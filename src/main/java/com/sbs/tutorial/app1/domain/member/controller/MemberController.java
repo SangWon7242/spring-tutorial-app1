@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -27,17 +28,17 @@ public class MemberController {
   }
 
   @PostMapping("/join")
-  public String join(MemberJoinForm memberJoinForm, HttpServletRequest req) {
+  public String join(MemberJoinForm memberJoinForm, HttpServletRequest req, MultipartFile profileImage) {
     String username = memberJoinForm.getUsername();
     String password = memberJoinForm.getPassword();
 
-    Member oldMember = memberService.getMemberByUsername(username);
+    Member oldMember = memberService.getMemberByUsername(username).orElse(null);
 
     if(oldMember != null) {
       return "redirect:/?errorMsg=Already exists username";
     }
 
-    Member member = memberService.join(memberJoinForm);
+    Member member = memberService.join(memberJoinForm, profileImage);
 
     try {
       req.login(username, password); // 로그인 처리
@@ -52,9 +53,11 @@ public class MemberController {
   @GetMapping("/profile")
   @PreAuthorize("isAuthenticated()")
   public String showProfile(Principal principal, Model model) {
-    Member member = memberService.getMemberByUsername(principal.getName());
+    Member member = memberService.getMemberByUsername(principal.getName()).orElse(null);
 
-    model.addAttribute("member", member);
+    if(member != null) {
+      model.addAttribute("member", member);
+    }
 
     return "member/profile";
   }

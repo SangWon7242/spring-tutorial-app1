@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,33 +32,29 @@ public class MemberService implements UserDetailsService {
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public Member getMemberByUsername(String username) {
-    return memberRepository.findByUsername(username).orElse(null);
+  public Optional<Member> getMemberByUsername(String username) {
+    return memberRepository.findByUsername(username);
   }
 
-  public Member join(MemberJoinForm memberJoinForm) {
+  public Member join(MemberJoinForm memberJoinForm, MultipartFile profileImage) {
     // 프로필 이미지가 저장될 경로
-    String profileImgRelPath = "member/" + UUID.randomUUID() + ".png";
-    // 예시 : member/1234567890.png
+    String profileImgDirName = "member";
+    String fileName = UUID.randomUUID() + ".png";
+    String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
+    // profileImgDirPath -> c:/spring-temp/app1/member
+    String profileImgFilePath = profileImgDirPath + "/" + fileName;
+    // profileImgFilePath -> c:/spring-temp/app1/member/123.png
 
-    File profileImgFile = new File(genFileDirPath + "/" + profileImgRelPath);
-    // genFileDirPath(c:/spring-temp/app1)
-    // profileImgFile(c:/spring-temp/app1/member/1234567890.png)
-
-    // canExecute : 폴더가 없으면 폴더 생성
-    if(!profileImgFile.canExecute()) {
-      profileImgFile.mkdirs();
-    }
-
-    MultipartFile profileImg = memberJoinForm.getProfileImg();
+    new File(profileImgDirPath).mkdirs(); // 관련된 폴더가 없으면 만들어준다.
 
     try {
-      // transferTo : 파일 저장
-      // profileImgFile : 파일 저장 경로
-      profileImg.transferTo(profileImgFile);
+      profileImage.transferTo(new File(profileImgFilePath));
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
+
+    String profileImgRelPath = profileImgDirName + "/" + fileName;
+    // member/123.png
 
     String passwordClearText = memberJoinForm.getPassword();
     String password = passwordEncoder.encode(passwordClearText);
