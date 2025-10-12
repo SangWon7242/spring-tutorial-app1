@@ -28,10 +28,29 @@
         </a>
       </div>
       <nav class="menu-1 ml-auto">
-        <ul class="flex h-full">
-          <li><a href="/member/login" class="flex h-full items-center px-5">로그인</a></li>
-          <li><a href="/member/join" class="flex h-full items-center px-5">회원가입</a></li>
-        </ul>
+        <!-- isAnonymous() : 로그인 하지 않은 상태 -->
+        <div sec:authorize="isAnonymous()">
+          <ul class="flex h-full">
+            <li><a href="/member/login" class="flex h-full items-center px-5">로그인</a></li>
+            <li><a href="/member/join" class="flex h-full items-center px-5">회원가입</a></li>
+          </ul>
+        </div>
+        <!-- isAuthenticated() : 로그인 된 상태 -->
+        <div sec:authorize="isAuthenticated()">
+          <ul class="flex h-full">
+            <li class="flex">
+              <span class="w-10 h-10 rounded-full overflow-hidden">
+                <img class="profile-img" th:src="@{${loginedMemberProfileImgUrl}}" alt="프로필 이미지">
+              </span>
+              <span class="flex h-full items-center px-5" th:text="|'${#authentication.name}' 님|"></span>
+            </li>
+            <li>
+              <a onclick="this.nextElementSibling.submit();" class="flex h-full items-center px-5 cursor-pointer">로그아웃</a>
+              <form action="/member/logout" method="POST" hidden></form>
+            </li>
+            <li><a href="/member/profile" class="flex h-full items-center px-5">마이페이지</a></li>
+          </ul>
+        </div>
       </nav>
     </div>
   </header>

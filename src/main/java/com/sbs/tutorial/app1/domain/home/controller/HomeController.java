@@ -17,12 +17,14 @@ public class HomeController {
 
   @RequestMapping("/")
   public String main(Principal principal, Model model) {
-    Member loginedMember = null;
-    String loginedMemberProfileImgUrl = null;
-
     if(principal == null) {
       return "home/main";
     }
+
+    System.out.println("principal : " + principal);
+
+    Member loginedMember = null;
+    String loginedMemberProfileImgUrl = null;
 
     if(principal != null && principal.getName() != null) {
       loginedMember = memberService.getMemberByUsername(principal.getName()).orElse(null);
