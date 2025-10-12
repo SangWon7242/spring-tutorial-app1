@@ -54,6 +54,7 @@ dependencies {
 
     // P6Spy 의존성 추가
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
 }
 
 tasks.withType<Test> {

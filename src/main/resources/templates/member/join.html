@@ -1,185 +1,186 @@
-<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<html layout:decorate="~{layout/layout.html}">
+<body>
+  <section class="join-section" layout:fragment="content">
+    <form th:action method="POST" enctype="multipart/form-data" onsubmit="JoinForm__submit(this); return false;">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">아이디</legend>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </g>
+          </svg>
+          <input
+              type="text"
+              required
+              placeholder="아이디를 입력해주세요."
+              title="input username"
+              name="username"
+          />
+        </label>
+        <p class="validator-hint hidden">
+          아이디를 확인 후 입력해주세요.
+        </p>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">비밀번호</legend>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+            >
+              <path
+                  d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
+              ></path>
+              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            </g>
+          </svg>
+          <input
+              type="password"
+              required
+              placeholder="비밀번호를 입력해주세요."
+              title="input password"
+              name="password"
+          />
+        </label>
+        <p class="validator-hint hidden">
+          비밀번호를 확인 후 입력해주세요.
+        </p>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">비밀번호 확인</legend>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+            >
+              <path
+                  d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
+              ></path>
+              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            </g>
+          </svg>
+          <input
+              type="password"
+              required
+              placeholder="비밀번호 확인을 입력해주세요."
+              title="input passwordConfirm"
+              name="passwordConfirm"
+          />
+        </label>
+        <p class="validator-hint hidden">
+          비밀번호 확인을 확인 후 입력해주세요.
+        </p>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">이메일</legend>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+            >
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </g>
+          </svg>
+          <input type="email" placeholder="이메일을 입력해주세요." required name="email" />
+        </label>
+        <div class="validator-hint hidden">이메일을 확인 후 입력해주세요.</div>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">프로필 이미지</legend>
+        <input type="file" class="file-input" name="profileImg" required accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+      </fieldset>
+      <div>
+        <button type="submit" class="btn btn-neutral">회원가입</button>
+      </div>
+    </form>
+  </section>
 
-<h1 class="text-2xl font-bold">회원 가입</h1>
-
-<script>
-  function JoinForm__submit(form) {
-    form.username.value = form.username.value.trim();
-    if(form.username.value.length === 0) {
-      alert("아이디를 입력해주세요.");
-      form.username.focus();
-      return;
-    }
-
-    form.password.value = form.password.value.trim();
-    if(form.password.value.length === 0) {
-      alert("비밀번호를 입력해주세요.");
-      form.password.focus();
-      return;
-    }
-
-    form.passwordConfirm.value = form.passwordConfirm.value.trim();
-    if(form.passwordConfirm.value.length === 0) {
-      alert("비밀번호 확인을 입력해주세요.");
-      form.passwordConfirm.focus();
-      return;
-    }
-
-    form.email.value = form.email.value.trim();
-    if(form.email.value.length === 0) {
-      alert("이메일을 입력해주세요.");
-      form.email.focus();
-      return;
-    }
-
-    // 파일 업로드 유효성 검사
-    const profileImgFile = form.profileImg.files[0];
-
-    // 파일이 선택되었는지 확인 (선택사항이므로 필수는 아님)
-    if (profileImgFile) {
-      // 파일 크기 검사 (5MB 제한)
-      const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
-      if (profileImgFile.size > maxFileSize) {
-        alert("프로필 이미지 파일 크기는 5MB 이하여야 합니다.");
-        form.profileImg.focus();
+  <script>
+    function JoinForm__submit(form) {
+      form.username.value = form.username.value.trim();
+      if(form.username.value.length === 0) {
+        alert("아이디를 입력해주세요.");
+        form.username.focus();
         return;
       }
 
-      // 파일 형식 검사
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-      if (!allowedTypes.includes(profileImgFile.type)) {
-        alert("프로필 이미지는 JPEG, JPG, PNG, GIF, WEBP 형식만 업로드 가능합니다.");
-        form.profileImg.focus();
+      form.password.value = form.password.value.trim();
+      if(form.password.value.length === 0) {
+        alert("비밀번호를 입력해주세요.");
+        form.password.focus();
         return;
       }
 
-      // 파일명 길이 검사
-      if (profileImgFile.name.length > 255) {
-        alert("파일명이 너무 깁니다. 255자 이하의 파일명을 사용해주세요.");
-        form.profileImg.focus();
+      form.passwordConfirm.value = form.passwordConfirm.value.trim();
+      if(form.passwordConfirm.value.length === 0) {
+        alert("비밀번호 확인을 입력해주세요.");
+        form.passwordConfirm.focus();
         return;
       }
+
+      form.email.value = form.email.value.trim();
+      if(form.email.value.length === 0) {
+        alert("이메일을 입력해주세요.");
+        form.email.focus();
+        return;
+      }
+
+      // 파일 업로드 유효성 검사
+      const profileImgFile = form.profileImg.files[0];
+
+      // 파일이 선택되었는지 확인 (선택사항이므로 필수는 아님)
+      if (profileImgFile) {
+        // 파일 크기 검사 (5MB 제한)
+        const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+        if (profileImgFile.size > maxFileSize) {
+          alert("프로필 이미지 파일 크기는 5MB 이하여야 합니다.");
+          form.profileImg.focus();
+          return;
+        }
+
+        // 파일 형식 검사
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(profileImgFile.type)) {
+          alert("프로필 이미지는 JPEG, JPG, PNG, GIF, WEBP 형식만 업로드 가능합니다.");
+          form.profileImg.focus();
+          return;
+        }
+
+        // 파일명 길이 검사
+        if (profileImgFile.name.length > 255) {
+          alert("파일명이 너무 깁니다. 255자 이하의 파일명을 사용해주세요.");
+          form.profileImg.focus();
+          return;
+        }
+      }
+
+      // 모든 유효성 검사를 통과하면 폼 제출
+      form.submit();
     }
-
-    // 모든 유효성 검사를 통과하면 폼 제출
-    form.submit();
-  }
-</script>
-
-<form th:action method="POST" enctype="multipart/form-data" onsubmit="JoinForm__submit(this); return false;">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">아이디</legend>
-    <label class="input validator">
-      <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
-        >
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </g>
-      </svg>
-      <input
-          type="text"
-          required
-          placeholder="아이디를 입력해주세요."
-          title="input username"
-          name="username"
-      />
-    </label>
-    <p class="validator-hint hidden">
-      아이디를 확인 후 입력해주세요.
-    </p>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">비밀번호</legend>
-    <label class="input validator">
-      <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
-        >
-          <path
-              d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
-          ></path>
-          <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-        </g>
-      </svg>
-      <input
-          type="password"
-          required
-          placeholder="비밀번호를 입력해주세요."
-          title="input password"
-          name="password"
-      />
-    </label>
-    <p class="validator-hint hidden">
-      비밀번호를 확인 후 입력해주세요.
-    </p>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">비밀번호 확인</legend>
-    <label class="input validator">
-      <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
-        >
-          <path
-              d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
-          ></path>
-          <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-        </g>
-      </svg>
-      <input
-          type="password"
-          required
-          placeholder="비밀번호 확인을 입력해주세요."
-          title="input passwordConfirm"
-          name="passwordConfirm"
-      />
-    </label>
-    <p class="validator-hint hidden">
-      비밀번호 확인을 확인 후 입력해주세요.
-    </p>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">이메일</legend>
-    <label class="input validator">
-      <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
-        >
-          <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-        </g>
-      </svg>
-      <input type="email" placeholder="이메일을 입력해주세요." required name="email" />
-    </label>
-    <div class="validator-hint hidden">이메일을 확인 후 입력해주세요.</div>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">프로필 이미지</legend>
-    <input type="file" class="file-input" name="profileImg" required accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
-  </fieldset>
-  <div>
-    <button type="submit" class="btn btn-neutral">회원가입</button>
-  </div>
-</form>
+  </script>
+</body>
+</html>
 
 
 

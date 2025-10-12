@@ -1,89 +1,91 @@
-<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<html layout:decorate="~{layout/layout.html}">
+<body>
+  <section class="login-section" layout:fragment="content">
+    <h1 class="text-2xl font-bold">로그인</h1>
 
-<h1 class="text-2xl font-bold">로그인</h1>
+    <form th:action method="POST" onsubmit="LoginForm__submit(this); return false;">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">아이디</legend>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+                stroke-lineLogin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </g>
+          </svg>
+          <input
+              type="text"
+              required
+              placeholder="아이디를 입력해주세요."
+              title="input username"
+              name="username"
+          />
+        </label>
+        <p class="validator-hint hidden">
+          아이디를 확인 후 입력해주세요.
+        </p>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">비밀번호</legend>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+                stroke-lineLogin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+            >
+              <path
+                  d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
+              ></path>
+              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            </g>
+          </svg>
+          <input
+              type="password"
+              required
+              placeholder="비밀번호를 입력해주세요."
+              title="input password"
+              name="password"
+          />
+        </label>
+        <p class="validator-hint hidden">
+          비밀번호를 확인 후 입력해주세요.
+        </p>
+      </fieldset>
+      <div>
+        <button type="submit" class="btn btn-neutral">로그인</button>
+      </div>
+    </form>
+  </section>
 
-<script>
-  function LoginForm__submit(form) {
-    form.username.value = form.username.value.trim();
-    if(form.username.value.length === 0) {
-      alert("아이디를 입력해주세요.");
-      form.username.focus();
-      return;
+  <script>
+    function LoginForm__submit(form) {
+      form.username.value = form.username.value.trim();
+      if(form.username.value.length === 0) {
+        alert("아이디를 입력해주세요.");
+        form.username.focus();
+        return;
+      }
+
+      form.password.value = form.password.value.trim();
+      if(form.password.value.length === 0) {
+        alert("비밀번호를 입력해주세요.");
+        form.password.focus();
+        return;
+      }
+
+      form.submit();
     }
-
-    form.password.value = form.password.value.trim();
-    if(form.password.value.length === 0) {
-      alert("비밀번호를 입력해주세요.");
-      form.password.focus();
-      return;
-    }
-
-    form.submit();
-  }
-</script>
-
-<form th:action method="POST" onsubmit="LoginForm__submit(this); return false;">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">아이디</legend>
-    <label class="input validator">
-      <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g
-            stroke-lineLogin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
-        >
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </g>
-      </svg>
-      <input
-          type="text"
-          required
-          placeholder="아이디를 입력해주세요."
-          title="input username"
-          name="username"
-      />
-    </label>
-    <p class="validator-hint hidden">
-      아이디를 확인 후 입력해주세요.
-    </p>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">비밀번호</legend>
-    <label class="input validator">
-      <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g
-            stroke-lineLogin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
-        >
-          <path
-              d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
-          ></path>
-          <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-        </g>
-      </svg>
-      <input
-          type="password"
-          required
-          placeholder="비밀번호를 입력해주세요."
-          title="input password"
-          name="password"
-      />
-    </label>
-    <p class="validator-hint hidden">
-      비밀번호를 확인 후 입력해주세요.
-    </p>
-  </fieldset>
-  <div>
-    <button type="submit" class="btn btn-neutral">로그인</button>
-  </div>
-</form>
-
+  </script>
+</body>
+</html>
 
 

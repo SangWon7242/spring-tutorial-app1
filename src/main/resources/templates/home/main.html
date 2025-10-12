@@ -1,17 +1,7 @@
-<h1>메인페이지</h1>
-
-<div class="flex gap-2">
-  <div class="avatar avatar-online avatar-placeholder">
-    <div class="bg-neutral text-neutral-content w-16 rounded-full">
-      <img class="profile-img" th:src="@{|${loginedMemberProfileImgUrl}}" alt="프로필 이미지">
-    </div>
-  </div>
-  <div>
-    <div>
-      <span class="text-xl" th:text="|아이디 : ${loginedMember.username}|"></span>
-    </div>
-    <div>
-      <span class="text-xl" th:text="|이메일 : ${loginedMember.email}|"></span>
-    </div>
-  </div>
-</div>
+<html layout:decorate="~{layout/layout.html}">
+<body>
+  <section class="main-section flex-1 flex items-center justify-center" layout:fragment="content">
+    <h1 class="text-3xl">스프링부트 메인페이지</h1>
+  </section>
+</body>
+</html>

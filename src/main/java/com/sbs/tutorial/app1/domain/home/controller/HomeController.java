@@ -20,6 +20,10 @@ public class HomeController {
     Member loginedMember = null;
     String loginedMemberProfileImgUrl = null;
 
+    if(principal == null) {
+      return "home/main";
+    }
+
     if(principal != null && principal.getName() != null) {
       loginedMember = memberService.getMemberByUsername(principal.getName()).orElse(null);
     }

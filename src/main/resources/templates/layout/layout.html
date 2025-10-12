@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>스프링부트 앱</title>
+
+  <!-- 제이쿼리 불러오기 -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- DaisyUI 불러오기 -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+
+  <!-- tailwind CSS 불러오기 -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- 공통 css 적용 -->
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="top-bar border-b">
+    <div class="container mx-auto h-20 flex items-center">
+      <div class="logo-box">
+        <a href="/" class="logo font-bold text-2xl">
+          Spring Boot App
+        </a>
+      </div>
+      <nav class="menu-1 ml-auto">
+        <ul class="flex h-full">
+          <li><a href="/member/login" class="flex h-full items-center px-5">로그인</a></li>
+          <li><a href="/member/join" class="flex h-full items-center px-5">회원가입</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-wrap flex-1 flex flex-col">
+    <section layout:fragment="content"></section>
+  </main>
+
+  <footer class="footer-bar bg-[#ccc]">
+    <div class="container mx-auto h-20 flex items-center justify-center">
+      <p class="copyright">
+        Copyright © SpringBoot App. All rights reserved.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

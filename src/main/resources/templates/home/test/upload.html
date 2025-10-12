@@ -1,18 +1,21 @@
-<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<html layout:decorate="~{layout/layout.html}">
+  <body>
+    <section class="fileupload-section" layout:fragment="content">
+      <h1 class="text-2xl font-bold">파일 업로드 테스트</h1>
 
-<h1 class="text-2xl font-bold">파일 업로드 테스트</h1>
-
-<form th:action="@{/upload}" method="POST" enctype="multipart/form-data">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">파일을 선택해주세요.</legend>
-    <input type="file" class="file-input" name="img1" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">파일을 선택해주세요.</legend>
-    <input type="file" class="file-input" name="img2" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
-  </fieldset>
-  <div>
-    <button type="submit" class="btn btn-neutral">업로드</button>
-  </div>
-</form>
+      <form th:action="@{/upload}" method="POST" enctype="multipart/form-data">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">파일을 선택해주세요.</legend>
+          <input type="file" class="file-input" name="img1" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">파일을 선택해주세요.</legend>
+          <input type="file" class="file-input" name="img2" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+        </fieldset>
+        <div>
+          <button type="submit" class="btn btn-neutral">업로드</button>
+        </div>
+      </form>
+    </section>
+  </body>
+</html>
