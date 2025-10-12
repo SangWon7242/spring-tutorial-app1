@@ -1,5 +1,6 @@
 package com.sbs.tutorial.app1.domain.member.service;
 
+import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.form.MemberJoinForm;
 import com.sbs.tutorial.app1.domain.member.repository.MemberRepository;
@@ -38,8 +39,9 @@ public class MemberService implements UserDetailsService {
 
   public Member join(MemberJoinForm memberJoinForm, MultipartFile profileImage) {
     // 프로필 이미지가 저장될 경로
-    String profileImgDirName = "member";
-    String fileName = UUID.randomUUID() + ".png";
+    String profileImgDirName = "member/" + Ut.date.getCurrentDateFormatted("yyyy_MM_dd");
+    String ext = Ut.file.getExt(profileImage.getOriginalFilename());
+    String fileName = UUID.randomUUID() + "." + ext;
     String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
     // profileImgDirPath -> c:/spring-temp/app1/member
     String profileImgFilePath = profileImgDirPath + "/" + fileName;

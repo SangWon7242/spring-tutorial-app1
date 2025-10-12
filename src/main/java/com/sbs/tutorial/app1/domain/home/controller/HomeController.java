@@ -30,6 +30,8 @@ public class HomeController {
       loginedMember = memberService.getMemberByUsername(principal.getName()).orElse(null);
     }
 
+    System.out.println(loginedMember.getProfileImg());
+
     if(loginedMember != null) {
       loginedMemberProfileImgUrl = "/gen/" + loginedMember.getProfileImg();
     }
