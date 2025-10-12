@@ -24,7 +24,7 @@ public class SecurityConfig {
         ).formLogin(form -> form
             .loginPage("/member/login") // GET : 로그인 페이지
             .loginProcessingUrl("/member/login") // POST : 로그인 처리
-            .defaultSuccessUrl("/member/profile")
+            .defaultSuccessUrl("/")
             .permitAll()
         ).logout(logout -> logout
             .logoutUrl("/member/logout") // GET : 로그아웃
