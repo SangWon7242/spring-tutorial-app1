@@ -18,7 +18,18 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.ignoringRequestMatchers("/**")) // csrf 허용
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().permitAll() // 모든 요청 허용
+            .requestMatchers("/", "/member/join").permitAll() // permitAll : 접속 허용
+            .requestMatchers("/css/**", "/js/**").permitAll()
+            .anyRequest().authenticated() // 위 사항을 제외하고는 로그인 필요
+        ).formLogin(form -> form
+            .loginPage("/member/login") // GET : 로그인 페이지
+            .loginProcessingUrl("/member/login") // POST : 로그인 처리
+            .defaultSuccessUrl("/member/profile")
+            .permitAll()
+        ).logout(logout -> logout
+            .logoutUrl("/member/logout") // GET : 로그아웃
+            .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트
+            .permitAll()
         );
 
     return http.build();
@@ -30,8 +41,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  // 스프링 시큐리티 인증을 처리
-  // 커스텀 인증 로직을 구현할 때 필요
+    // 스프링 시큐리티 인증을 처리
+    // 커스텀 인증 로직을 구현할 때 필요
   AuthenticationManager authenticationManager(
       AuthenticationConfiguration authenticationConfiguration) throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
