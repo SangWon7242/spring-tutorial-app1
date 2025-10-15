@@ -40,7 +40,7 @@
           <ul class="flex h-full">
             <li class="flex">
               <span class="w-10 h-10 rounded-full overflow-hidden">
-                <img class="profile-img" th:src="@{${#authentication.principal.profileImgUrl}}" alt="프로필 이미지">
+                <img class="profile-img" th:src="@{|/gen/${#authentication.principal.profileImgUrl}|}" alt="프로필 이미지">
               </span>
               <span class="flex h-full items-center px-5" th:text="|'${#authentication.principal.username}' 님|"></span>
             </li>
