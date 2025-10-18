@@ -6,15 +6,15 @@
     <div class="flex gap-2">
       <div class="avatar avatar-online avatar-placeholder">
         <div class="bg-neutral text-neutral-content w-16 rounded-full">
-          <img class="profile-img" th:src="@{|/member/profile/img/${#authentication.principal.id}|}" alt="프로필 이미지">
+          <img class="profile-img" th:src="@{|/gen/${#authentication.principal.profileImgUrl}|}" alt="프로필 이미지">
         </div>
       </div>
       <div>
         <div>
-          <span class="text-xl" th:text="|아이디 : ${memberContext.username}|"></span>
+          <span class="text-xl" th:text="|아이디 : ${#authentication.principal.username}|"></span>
         </div>
         <div>
-          <span class="text-xl" th:text="|이메일 : ${memberContext.email}|"></span>
+          <span class="text-xl" th:text="|이메일 : ${#authentication.principal.email}|"></span>
         </div>
       </div>
     </div>
