@@ -6,7 +6,7 @@
     <div class="flex gap-2">
       <div class="avatar avatar-online avatar-placeholder">
         <div class="bg-neutral text-neutral-content w-16 rounded-full">
-          <img class="profile-img" th:src="@{|/gen/${#authentication.principal.profileImgUrl}|}" alt="프로필 이미지">
+          <img class="profile-img" th:src="@{|/member/profile/img/${#authentication.principal.id}|}" alt="프로필 이미지">
         </div>
       </div>
       <div>
