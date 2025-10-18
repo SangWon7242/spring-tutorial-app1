@@ -20,4 +20,10 @@ public class Member extends BaseEntity {
   @Column(unique = true)
   private String email;
   private String profileImg;
+
+  public String getProfileImgUrl() {
+    if(profileImg == null) return null;
+
+    return "/gen/" + profileImg;
+  }
 }

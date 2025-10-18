@@ -11,10 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -64,5 +61,10 @@ public class MemberController {
     model.addAttribute("memberContext", memberContext);
 
     return "member/profile";
+  }
+
+  @GetMapping("/profile/img/{id}")
+  public String showProfileImg(@PathVariable("id") Long id) {
+    return "redirect:" + memberService.getMemberById(id).getProfileImgUrl();
   }
 }
