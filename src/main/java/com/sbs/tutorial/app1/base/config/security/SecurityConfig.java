@@ -1,15 +1,16 @@
 package com.sbs.tutorial.app1.base.config.security;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Configuration
 @EnableWebSecurity
@@ -18,11 +19,10 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.ignoringRequestMatchers("/**")) // csrf 허용
-        .requestCache(req -> req.requestCache(new HttpSessionRequestCache()))
         .authorizeHttpRequests(auth -> auth
             // Chrome DevTools 경로 허용
             .requestMatchers("/.well-known/**").permitAll()
-            .requestMatchers("/", "/member/join", "/member/login").permitAll() // permitAll : 접속 허용
+            .requestMatchers("/", "/member/join", "/member/login", "/error").permitAll() // permitAll : 접속 허용
             // 정적 리소스
             .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/gen/**", "/member/profile/img/**").permitAll()
             .anyRequest().authenticated() // 위 사항을 제외하고는 로그인 필요
@@ -39,6 +39,13 @@ public class SecurityConfig {
 
     return http.build();
   }
+
+//  @Bean
+//  public WebSecurityCustomizer webSecurityCustomizer() {
+//    return (web) -> web.ignoring()
+//        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+//        .requestMatchers("/favicon.ico", "/resources/**", "/error");
+//  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {

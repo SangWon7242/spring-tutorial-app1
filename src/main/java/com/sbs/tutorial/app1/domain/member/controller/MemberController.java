@@ -68,6 +68,8 @@ public class MemberController {
   @GetMapping("/profile/img/{id}")
   public ResponseEntity<Object> showProfileImg(@PathVariable("id") Long id) {
     String profileImgUrl = memberService.getMemberById(id).getProfileImgUrl();
+
+    System.out.println("profileImgUrl : " + profileImgUrl);
     
     // 캐시 거는 방법
     return ResponseEntity
