@@ -1,5 +1,6 @@
 package com.sbs.tutorial.app1.domain.member.controller;
 
+import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.form.MemberJoinForm;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
@@ -7,11 +8,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -65,5 +68,12 @@ public class MemberController {
     }
 
     return "member/profile";
+  }
+
+  @GetMapping("/currentUser")
+  @ResponseBody
+  public MemberContext currentUser(@AuthenticationPrincipal MemberContext memberContext) {
+    // @AuthenticationPrincipal : 현재 로그인한 사용자 정보에 접근한다.
+    return memberContext;
   }
 }
