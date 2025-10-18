@@ -16,27 +16,7 @@ public class HomeController {
   private final MemberService memberService;
 
   @RequestMapping("/")
-  public String main(Principal principal, Model model) {
-    if(principal == null) {
-      return "home/main";
-    }
-
-    System.out.println("principal : " + principal);
-
-    Member loginedMember = null;
-    String loginedMemberProfileImgUrl = null;
-
-    if(principal != null && principal.getName() != null) {
-      loginedMember = memberService.getMemberByUsername(principal.getName()).orElse(null);
-    }
-
-    if(loginedMember != null) {
-      loginedMemberProfileImgUrl = "/gen/" + loginedMember.getProfileImg();
-    }
-
-    model.addAttribute("loginedMember", loginedMember);
-    model.addAttribute("loginedMemberProfileImgUrl", loginedMemberProfileImgUrl);
-
+  public String main() {
     return "home/main";
   }
 

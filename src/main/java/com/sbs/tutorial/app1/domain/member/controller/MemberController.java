@@ -1,20 +1,24 @@
 package com.sbs.tutorial.app1.domain.member.controller;
 
-import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.form.MemberJoinForm;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequiredArgsConstructor
@@ -62,7 +66,17 @@ public class MemberController {
   }
 
   @GetMapping("/profile/img/{id}")
-  public String showProfileImg(@PathVariable("id") Long id) {
-    return "redirect:" + memberService.getMemberById(id).getProfileImgUrl();
+  public ResponseEntity<Object> showProfileImg(@PathVariable("id") Long id) {
+    String profileImgUrl = memberService.getMemberById(id).getProfileImgUrl();
+    
+    // 캐시 거는 방법
+    return ResponseEntity
+        .status(HttpStatus.FOUND)
+        .cacheControl(CacheControl
+            .maxAge(1, TimeUnit.HOURS) 
+            .cachePublic()
+            .immutable())
+        .location(URI.create(profileImgUrl))
+        .build();
   }
 }
