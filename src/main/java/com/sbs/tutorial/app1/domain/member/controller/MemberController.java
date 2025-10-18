@@ -58,22 +58,11 @@ public class MemberController {
     return "member/login";
   }
 
-  @GetMapping("/profile")
   @PreAuthorize("isAuthenticated()")
-  public String showProfile(Principal principal, Model model) {
-    Member member = memberService.getMemberByUsername(principal.getName()).orElse(null);
-
-    if(member != null) {
-      model.addAttribute("member", member);
-    }
+  @GetMapping("/profile")
+  public String showProfile(@AuthenticationPrincipal MemberContext memberContext, Model model) {
+    model.addAttribute("memberContext", memberContext);
 
     return "member/profile";
-  }
-
-  @GetMapping("/currentUser")
-  @ResponseBody
-  public MemberContext currentUser(@AuthenticationPrincipal MemberContext memberContext) {
-    // @AuthenticationPrincipal : 현재 로그인한 사용자 정보에 접근한다.
-    return memberContext;
   }
 }
