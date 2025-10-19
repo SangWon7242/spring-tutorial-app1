@@ -1,17 +1,31 @@
 package com.sbs.tutorial.app1.base.config.security.service;
 
+import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
+import com.sbs.tutorial.app1.base.config.security.exception.OAuthTypeMatchNotFoundException;
+import com.sbs.tutorial.app1.domain.member.entity.Member;
+import com.sbs.tutorial.app1.domain.member.exception.MemberNotFoundException;
+import com.sbs.tutorial.app1.domain.member.repository.MemberRepository;
+import com.sbs.tutorial.app1.domain.member.service.MemberService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
 public class OAuth2UserService extends DefaultOAuth2UserService {
-  /*
+
   private final MemberRepository memberRepository;
   private final MemberService memberService;
 
@@ -32,11 +46,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
       throw new OAuthTypeMatchNotFoundException();
     }
 
+    // OAuth ID로 가입된 회원이 없는 경우
+    // 로그인시 회원가입을 실시(새 회원 생성)
     if (isNew(oauthType, oauthId)) {
       switch (oauthType) {
         case "KAKAO" -> {
           System.out.println(attributes);
-          log.debug("attributes : " + attributes);
 
           Map attributesProperties = (Map) attributes.get("properties");
           Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
@@ -56,7 +71,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
           memberService.setProfileImgByUrl(member, profileImage);
         }
       }
-    } else {
+    } else { // 가입한 회원이 있으면 회원 데이터 가져옴
       member = memberRepository.findByUsername("%s_%s".formatted(oauthType, oauthId)).orElseThrow(MemberNotFoundException::new);
     }
 
@@ -68,5 +83,4 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
   private boolean isNew(String oAuthType, String oAuthId) {
     return memberRepository.findByUsername("%s_%s".formatted(oAuthType, oAuthId)).isEmpty();
   }
-*/
 }
