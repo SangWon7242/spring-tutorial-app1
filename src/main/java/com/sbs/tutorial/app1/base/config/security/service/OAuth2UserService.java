@@ -6,8 +6,8 @@ import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.exception.MemberNotFoundException;
 import com.sbs.tutorial.app1.domain.member.repository.MemberRepository;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
-import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -24,6 +24,7 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j // 로깅 기능을 제공
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
   private final MemberRepository memberRepository;
@@ -51,7 +52,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     if (isNew(oauthType, oauthId)) {
       switch (oauthType) {
         case "KAKAO" -> {
+
           System.out.println(attributes);
+          log.debug("attributes : " + attributes);
 
           Map attributesProperties = (Map) attributes.get("properties");
           Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
@@ -66,7 +69,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
           member = Member.builder().email(email).username(username).password("").build();
 
-          memberRepository.save(member);
+          memberRepository.save(member); // 프로필 이미지 없이 회원 생성
 
           memberService.setProfileImgByUrl(member, profileImage);
         }
