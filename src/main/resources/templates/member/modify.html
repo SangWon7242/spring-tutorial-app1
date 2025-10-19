@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout/layout.html}">
 <body>
-  <section class="modify-section" layout:fragment="content">
-    <form th:action="@{/member/modify}" method="POST">
+  <section class="modify-section" layout:fragment="content" >
+    <form th:action="@{/member/modify}" method="POST" enctype="multipart/form-data">
       <fieldset class="fieldset">
         <legend class="fieldset-legend">회원수정</legend>
         <div>
