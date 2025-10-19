@@ -57,14 +57,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
           log.debug("attributes : " + attributes);
 
           Map attributesProperties = (Map) attributes.get("properties");
-          Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
+          Map attributesKakaoAccount = (Map) attributes.get("kakao_account");
           String nickname = (String) attributesProperties.get("nickname");
           String profileImage = (String) attributesProperties.get("profile_image");
           String email = "%s@kakao.com".formatted(oauthId);
           String username = "KAKAO_%s".formatted(oauthId);
 
-          if ((boolean) attributesKakaoAcount.get("has_email")) {
-            email = (String) attributesKakaoAcount.get("email");
+          if ((boolean) attributesKakaoAccount.get("has_email")) {
+            email = (String) attributesKakaoAccount.get("email");
           }
 
           member = Member.builder().email(email).username(username).password("").build();

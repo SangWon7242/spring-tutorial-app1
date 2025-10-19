@@ -1,0 +1,23 @@
+<html layout:decorate="~{layout/layout.html}">
+<body>
+  <section class="modify-section" layout:fragment="content">
+    <form th:action="@{/member/modify}" method="POST">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">회원수정</legend>
+        <div>
+          <div>아이디</div>
+          <span th:text="${#authentication.principal.username}"></span>
+        </div>
+        <div>
+          <div>이메일</div>
+          <span th:text="${#authentication.principal.email}"></span>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-neutral">수정</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+</body>
+</html>
+

@@ -81,4 +81,11 @@ public class MemberController {
         .location(URI.create(profileImgUrl))
         .build();
   }
+
+  @PreAuthorize("isAuthenticated()")
+  @GetMapping("/modify")
+  public String showModify() {
+    return "member/modify";
+  }
+
 }
