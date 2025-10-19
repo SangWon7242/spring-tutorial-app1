@@ -1,9 +1,11 @@
 package com.sbs.tutorial.app1.base.config.security;
 
+
+import com.sbs.tutorial.app1.base.config.security.service.OAuth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+  @Autowired
+  private OAuth2UserService oAuth2UserService;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -30,7 +35,11 @@ public class SecurityConfig {
             .loginProcessingUrl("/member/login") // POST : 로그인 처리
             .defaultSuccessUrl("/")
             .permitAll()
-        ).oauth2Login(Customizer.withDefaults() // 최소한의 설정
+        ).oauth2Login(oauth2 -> oauth2
+            .loginPage("/member/login") // GET : 로그인 페이지
+            .defaultSuccessUrl("/member/profile")
+            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+            .permitAll()
         ).logout(logout -> logout
             .logoutUrl("/member/logout") // POST : 로그아웃
             .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트
@@ -39,13 +48,6 @@ public class SecurityConfig {
 
     return http.build();
   }
-
-//  @Bean
-//  public WebSecurityCustomizer webSecurityCustomizer() {
-//    return (web) -> web.ignoring()
-//        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-//        .requestMatchers("/favicon.ico", "/resources/**", "/error");
-//  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {
