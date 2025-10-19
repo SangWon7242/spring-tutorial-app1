@@ -1,5 +1,6 @@
 package com.sbs.tutorial.app1.domain.member.controller;
 
+import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.form.MemberJoinForm;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
@@ -10,6 +11,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,6 +87,19 @@ public class MemberController {
   @PreAuthorize("isAuthenticated()")
   @GetMapping("/modify")
   public String showModify() {
+    return "member/modify";
+  }
+
+  @PreAuthorize("isAuthenticated()")
+  @PostMapping("/modify")
+  public String modify(
+      @AuthenticationPrincipal MemberContext memberContext,
+      MultipartFile profileImage) {
+
+    Member member = memberService.getMemberById(memberContext.getId());
+
+    memberService.modify(member, profileImage);
+
     return "member/modify";
   }
 

@@ -13,6 +13,18 @@
           <span th:text="${#authentication.principal.email}"></span>
         </div>
         <div>
+          <div>기존 프로필 이미지</div>
+          <img class="profile-img" th:src="@{|/member/profile/img/${#authentication.principal.id}|}" alt="프로필 이미지">
+          <label>
+            <div>삭제</div>
+            <input type="checkbox" name="profileImgDelete" value="Y">
+          </label>
+        </div>
+        <div>
+          <div>프로필 이미지</div>
+          <input type="file" name="profileImage" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+        </div>
+        <div>
           <button type="submit" class="btn btn-neutral">수정</button>
         </div>
       </fieldset>

@@ -30,9 +30,26 @@ public class MemberService {
   private String getCurrentProfileImgDirName() {
     return "member/" + Ut.date.getCurrentDateFormatted("yyyy_MM_dd");
   }
-
-
+  
   public Member join(MemberJoinForm memberJoinForm, MultipartFile profileImage) {
+    String profileImgRelPath = saveProfileImg(profileImage);
+
+    String passwordClearText = memberJoinForm.getPassword();
+    String password = passwordEncoder.encode(passwordClearText);
+
+    Member member = Member.builder()
+        .username(memberJoinForm.getUsername())
+        .password(password)
+        .email(memberJoinForm.getEmail())
+        .profileImg(profileImgRelPath)
+        .build();
+
+    memberRepository.save(member);
+
+    return member;
+  }
+
+  private String saveProfileImg(MultipartFile profileImage) {
     // 프로필 이미지가 저장될 경로
     String profileImgDirName = getCurrentProfileImgDirName();
     String ext = Ut.file.getExt(profileImage.getOriginalFilename());
@@ -50,22 +67,7 @@ public class MemberService {
       throw new RuntimeException(e);
     }
 
-    String profileImgRelPath = profileImgDirName + "/" + fileName;
-    // member/123.png
-
-    String passwordClearText = memberJoinForm.getPassword();
-    String password = passwordEncoder.encode(passwordClearText);
-
-    Member member = Member.builder()
-        .username(memberJoinForm.getUsername())
-        .password(password)
-        .email(memberJoinForm.getEmail())
-        .profileImg(profileImgRelPath)
-        .build();
-
-    memberRepository.save(member);
-
-    return member;
+    return profileImgDirName + "/" + fileName;
   }
 
   public Member getMemberById(Long id) {
@@ -101,6 +103,14 @@ public class MemberService {
   public void setProfileImgByUrl(Member member, String url) {
     String filePath = Ut.file.downloadImg(url, genFileDirPath + "/" + getCurrentProfileImgDirName() + "/" + UUID.randomUUID());
     member.setProfileImg(getCurrentProfileImgDirName() + "/" + new File(filePath).getName());
+    memberRepository.save(member);
+  }
+
+  public void modify(Member member, MultipartFile profileImage) {
+    removeProfileImg(member); // 기존 프로필 제거
+
+    String profileImgRelPath = saveProfileImg(profileImage);
+    member.setProfileImg(profileImgRelPath);
     memberRepository.save(member);
   }
 }
