@@ -1,6 +1,7 @@
 package com.sbs.tutorial.app1.domain.member.controller;
 
 import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
+import com.sbs.tutorial.app1.base.config.security.service.MemberSecurityService;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
 import com.sbs.tutorial.app1.domain.member.form.MemberJoinForm;
 import com.sbs.tutorial.app1.domain.member.service.MemberService;
@@ -11,7 +12,11 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/member")
 public class MemberController {
   private final MemberService memberService;
+  private final MemberSecurityService memberSecurityService;
 
   @GetMapping("/join")
   public String showJoin() {
@@ -101,6 +107,16 @@ public class MemberController {
     Member member = memberService.getMemberById(memberContext.getId());
 
     memberService.modify(member, profileImage);
+
+    // 세션 갱신 : DB에서 최신 정보를 다시 로딩
+    UserDetails updatedUserDetails = memberSecurityService.loadUserByUsername(member.getUsername());
+    Authentication newAuth = new UsernamePasswordAuthenticationToken(
+        updatedUserDetails,
+        updatedUserDetails.getPassword(),
+        updatedUserDetails.getAuthorities()
+    );
+
+    SecurityContextHolder.getContext().setAuthentication(newAuth);
 
     return "member/modify";
   }

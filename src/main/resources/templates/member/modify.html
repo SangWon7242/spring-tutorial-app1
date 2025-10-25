@@ -14,7 +14,7 @@
         </div>
         <div>
           <div>기존 프로필 이미지</div>
-          <img class="profile-img" th:src="@{|/member/profile/img/${#authentication.principal.id}|}" alt="프로필 이미지">
+          <img class="profile-img" th:src="${#authentication.principal.getProfileImgRedirectUrl()}" alt="프로필 이미지">
           <label>
             <div>삭제</div>
             <input type="checkbox" name="profileImgDelete" value="Y">
