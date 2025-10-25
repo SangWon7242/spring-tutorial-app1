@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,7 +50,7 @@ class App1ApplicationTests {
   private MemberRepository memberRepository;
 
   @Test
-  @DisplayName("메인화면에서는 안녕이 나와야 한다.")
+  @DisplayName("메인")
   void t01() throws Exception {
     // WHEN :
     // GET /
@@ -60,7 +62,7 @@ class App1ApplicationTests {
     resultActions.andExpect(status().is2xxSuccessful()) // 상태코드 확인
         .andExpect(handler().handlerType(HomeController.class)) // 컨트롤러 확인
         .andExpect(handler().methodName("main")) // 메서드명 확인
-        .andExpect(content().string(containsString("안녕"))); // 내용 확인
+        .andExpect(content().string(containsString("스프링"))); // 내용 확인
     /*
     200 : 성공
     300 : 리다이렉트
@@ -79,14 +81,14 @@ class App1ApplicationTests {
 
   @Test
   @DisplayName("user1로 로그인 후 프로필페이지에 접속하면 user1의 이메일이 보여야 한다.")
+  @WithUserDetails("user1")
   void t03() throws Exception {
     // mocMvc로 로그인 처리
 
     // WHEN:
     // GET : /member/login
     ResultActions resultActions = mvc
-        .perform(get("/member/profile")
-            .with(user("user1").password("1234").roles("user")))
+        .perform(get("/member/profile"))
         .andDo(print());
 
     // THEN
@@ -98,14 +100,14 @@ class App1ApplicationTests {
 
   @Test
   @DisplayName("user4로 로그인 후 프로필페이지에 접속하면 user4의 이메일이 보여야 한다.")
+  @WithUserDetails("user4")
   void t04() throws Exception {
     // mocMvc로 로그인 처리
 
     // WHEN:
     // GET : /member/login
     ResultActions resultActions = mvc
-        .perform(get("/member/profile")
-            .with(user("user4").password("1234").roles("user")))
+        .perform(get("/member/profile"))
         .andDo(print());
 
     // THEN
