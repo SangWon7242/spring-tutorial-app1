@@ -31,6 +31,7 @@
         <!-- isAnonymous() : 로그인 하지 않은 상태 -->
         <div sec:authorize="isAnonymous()">
           <ul class="flex h-full">
+            <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
             <li><a href="/member/login" class="flex h-full items-center px-5">로그인</a></li>
             <li><a href="/member/join" class="flex h-full items-center px-5">회원가입</a></li>
           </ul>
@@ -38,6 +39,7 @@
         <!-- isAuthenticated() : 로그인 된 상태 -->
         <div sec:authorize="isAuthenticated()">
           <ul class="flex h-full">
+            <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
             <li class="flex">
               <span class="w-10 h-10 rounded-full overflow-hidden">
                 <img class="profile-img" th:src="${#authentication.principal.getProfileImgRedirectUrl()}" alt="프로필 이미지">
