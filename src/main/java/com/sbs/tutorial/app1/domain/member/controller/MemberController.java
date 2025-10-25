@@ -71,7 +71,9 @@ public class MemberController {
   public ResponseEntity<Object> showProfileImg(@PathVariable("id") Long id) {
     String profileImgUrl = memberService.getMemberById(id).getProfileImgUrl();
 
-    System.out.println("profileImgUrl : " + profileImgUrl);
+    if(profileImgUrl == null) {
+      profileImgUrl = "https://placehold.co/100x100?text=U_U";
+    }
     
     // 캐시 거는 방법
     return ResponseEntity
@@ -102,5 +104,4 @@ public class MemberController {
 
     return "member/modify";
   }
-
 }
