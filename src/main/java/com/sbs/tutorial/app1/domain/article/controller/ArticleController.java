@@ -50,6 +50,6 @@ public class ArticleController {
 
     genFileService.saveFiles(article, fileMap);
 
-    return "작성";
+    return "%d번 글이 작성되었습니다.".formatted(article.getId());
   }
 }

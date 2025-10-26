@@ -1,5 +1,6 @@
 package com.sbs.tutorial.app1.domain.fileUpload.service;
 
+import com.sbs.tutorial.app1.base.config.base.AppConfig;
 import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 @Service
@@ -22,8 +25,8 @@ public class GenFileService {
     for (String inputName : fileMap.keySet()) {
       MultipartFile multipartFile = fileMap.get(inputName);
 
-      // body__img__1
-      // body, img, 1
+      if(multipartFile.isEmpty()) continue;
+
       String[] inputNameBits = inputName.split("__");
 
       String typeCode = inputNameBits[0]; // 예 : bodyImg
@@ -51,7 +54,18 @@ public class GenFileService {
           .originFileName(originFileName)
           .build();
 
-      genFileRepository.save(genFile);
+      genFileRepository.save(genFile); // DB 저장
+
+      String filePath = AppConfig.GEN_FILE_DIR_PATH + "/" + fileDir + "/" + genFile.getFileName();
+
+      File file = new File(filePath);
+      file.getParentFile().mkdirs();
+
+      try {
+        multipartFile.transferTo(file);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }
