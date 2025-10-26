@@ -79,6 +79,10 @@
 
     if (params.msg) {
       successModal(params.msg);
+
+      const url = new URL(window.location);
+      url.searchParams.delete('msg');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
     }
   </script>
 </body>
