@@ -1,6 +1,7 @@
 package com.sbs.tutorial.app1.domain.fileUpload.service;
 
 import com.sbs.tutorial.app1.base.config.base.AppConfig;
+import com.sbs.tutorial.app1.base.dto.RsData;
 import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -18,10 +20,14 @@ import java.util.Map;
 public class GenFileService {
   private final GenFileRepository genFileRepository;
 
-  public void saveFiles(Article article, Map<String, MultipartFile> fileMap) {
+  public RsData<Map<String, GenFile>> saveFiles(Article article, Map<String, MultipartFile> fileMap) {
     String relTypeCode = "article";
     long relId = article.getId();
 
+    // 내가 만든 파일을 genFileIds 에 넣겠다.
+    Map<String, GenFile> genFileIds = new HashMap<>();
+
+    // inputName : common__inBody__1
     for (String inputName : fileMap.keySet()) {
       MultipartFile multipartFile = fileMap.get(inputName);
 
@@ -66,6 +72,10 @@ public class GenFileService {
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
+
+      genFileIds.put(inputName, genFile);
     }
+
+    return new RsData<>("S-1", "파일을 업로드했습니다.", genFileIds);
   }
 }

@@ -1,9 +1,11 @@
 package com.sbs.tutorial.app1.domain.article.controller;
 
 import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
+import com.sbs.tutorial.app1.base.dto.RsData;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.article.input.ArticleForm.ArticleForm;
 import com.sbs.tutorial.app1.domain.article.service.ArticleService;
+import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
 import com.sbs.tutorial.app1.domain.fileUpload.service.GenFileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,9 @@ public class ArticleController {
 
     Article article = articleService.write(memberContext.getId(), articleForm.getTitle(), articleForm.getContent());
 
-    genFileService.saveFiles(article, fileMap);
+    RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
+
+    log.debug("saveFilesRsData : {}", saveFilesRsData);
 
     return "%d번 글이 작성되었습니다.".formatted(article.getId());
   }
