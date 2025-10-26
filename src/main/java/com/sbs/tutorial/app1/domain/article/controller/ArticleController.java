@@ -2,6 +2,7 @@ package com.sbs.tutorial.app1.domain.article.controller;
 
 import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
 import com.sbs.tutorial.app1.base.dto.RsData;
+import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.article.input.ArticleForm.ArticleForm;
 import com.sbs.tutorial.app1.domain.article.service.ArticleService;
@@ -13,10 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
@@ -36,7 +39,6 @@ public class ArticleController {
 
   @PreAuthorize("isAuthenticated()")
   @PostMapping("/write")
-  @ResponseBody
   public String write(@AuthenticationPrincipal MemberContext memberContext,
                       @Valid ArticleForm articleForm,
                       MultipartRequest multipartRequest,
@@ -54,6 +56,20 @@ public class ArticleController {
 
     log.debug("saveFilesRsData : {}", saveFilesRsData);
 
-    return "%d번 글이 작성되었습니다.".formatted(article.getId());
+    String msg = "%d번 게시물이 작성되었습니다.".formatted(article.getId());
+    
+    // URL 파라미터에 한글을 사용하려면 URL 인코딩이 필요
+    msg = Ut.url.encode(msg);
+
+    return "redirect:/article/%d?msg=%s".formatted(article.getId(), msg);
+  }
+
+  @GetMapping("/{id}")
+  public String showDetail(Model model, @PathVariable Long id) {
+    Article article = articleService.getArticleById(id);
+
+    model.addAttribute("article", article);
+
+    return "article/detail";
   }
 }

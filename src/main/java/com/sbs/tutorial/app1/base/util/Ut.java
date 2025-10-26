@@ -2,9 +2,13 @@ package com.sbs.tutorial.app1.base.util;
 
 import org.apache.tika.Tika;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -72,6 +76,16 @@ public class Ut {
         case "gif", "png", "mp4", "mov", "mp3", "avi" -> ext;
         default -> "etc";
       };
+    }
+  }
+
+  public static class url {
+    public static String encode(String msg) {
+      try {
+        return URLEncoder.encode(msg, "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }
