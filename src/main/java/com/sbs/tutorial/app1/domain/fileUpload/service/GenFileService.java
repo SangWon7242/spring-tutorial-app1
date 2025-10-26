@@ -1,5 +1,6 @@
 package com.sbs.tutorial.app1.domain.fileUpload.service;
 
+import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
 import com.sbs.tutorial.app1.domain.fileUpload.repository.GenFileRepository;
@@ -21,15 +22,19 @@ public class GenFileService {
     for (String inputName : fileMap.keySet()) {
       MultipartFile multipartFile = fileMap.get(inputName);
 
-      String typeCode = "common"; // 파일 타입
-      String type2Code = "inBody"; // 세부 타입
-      String fileExt = "jpg"; // 파일 확장자
-      String fileExtTypeCode = "img"; // 확장자 타입
-      String fileExtType2Code = "jpg"; // 세부 확장자 타입
-      int fileNo = 1; // 파일 번호
-      int fileSize = 1000; // 파일 크기
-      String fileDir = "article/2025_10_26"; // 저장 디렉토리
-      String originFileName = "??"; // 원본 파일명
+      // body__img__1
+      // body, img, 1
+      String[] inputNameBits = inputName.split("__");
+
+      String typeCode = inputNameBits[0]; // 예 : bodyImg
+      String type2Code = inputNameBits[1]; // 1
+      String originFileName = multipartFile.getOriginalFilename();;
+      String fileExt = Ut.file.getExt(originFileName);;
+      String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
+      String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
+      int fileNo = Integer.parseInt(inputNameBits[2]);
+      int fileSize = (int) multipartFile.getSize();
+      String fileDir = relTypeCode + "/" + Ut.date.getCurrentDateFormatted("yyyy_MM_dd");
 
       GenFile genFile = GenFile
           .builder()

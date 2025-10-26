@@ -56,5 +56,22 @@ public class Ut {
 
       return newFilePath;
     }
+
+    public static String getFileExtTypeCodeFromFileExt(String ext) {
+      return switch (ext) {
+        case "jpeg", "jpg", "gif", "png" -> "img"; // 이미지
+        case "mp4", "avi", "mov" -> "video"; // 비디오
+        case "mp3" -> "audio"; // 오디오
+        default -> "etc";
+      };
+    }
+
+    public static String getFileExtType2CodeFromFileExt(String ext) {
+      return switch (ext) {
+        case "jpeg", "jpg" -> "jpg";
+        case "gif", "png", "mp4", "mov", "mp3", "avi" -> ext;
+        default -> "etc";
+      };
+    }
   }
 }
