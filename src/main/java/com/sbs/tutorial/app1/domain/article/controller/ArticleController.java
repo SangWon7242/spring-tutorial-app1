@@ -4,6 +4,7 @@ import com.sbs.tutorial.app1.base.config.security.dto.MemberContext;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.article.input.ArticleForm.ArticleForm;
 import com.sbs.tutorial.app1.domain.article.service.ArticleService;
+import com.sbs.tutorial.app1.domain.fileUpload.service.GenFileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.Map;
 @Slf4j
 public class ArticleController {
   private final ArticleService articleService;
+  private final GenFileService genFileService;
 
   @PreAuthorize("isAuthenticated()")
   @GetMapping("/write")
@@ -44,11 +46,9 @@ public class ArticleController {
 
     Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 
-    log.debug("fileMap : {}", fileMap);
-
     Article article = articleService.write(memberContext.getId(), articleForm.getTitle(), articleForm.getContent());
 
-    log.debug("article : {}", article);
+    genFileService.saveFiles(article, fileMap);
 
     return "작성";
   }
