@@ -98,6 +98,8 @@ public class MemberService {
     File file = new File(profileImgPath);
 
     if(file.exists()) file.delete();
+
+    member.setProfileImg(null);
   }
 
   public void setProfileImgByUrl(Member member, String url) {
@@ -107,10 +109,13 @@ public class MemberService {
   }
 
   public void modify(Member member, MultipartFile profileImage) {
-    removeProfileImg(member); // 기존 프로필 제거
+    if(profileImage != null && !profileImage.isEmpty()) {
+      removeProfileImg(member); // 기존 프로필 제거
 
-    String profileImgRelPath = saveProfileImg(profileImage);
-    member.setProfileImg(profileImgRelPath);
+      String profileImgRelPath = saveProfileImg(profileImage);
+      member.setProfileImg(profileImgRelPath);
+    }
+
     memberRepository.save(member);
   }
 }

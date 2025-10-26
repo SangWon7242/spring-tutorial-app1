@@ -102,9 +102,14 @@ public class MemberController {
   @PostMapping("/modify")
   public String modify(
       @AuthenticationPrincipal MemberContext memberContext,
+      String profileImgDelete,
       MultipartFile profileImage) {
 
     Member member = memberService.getMemberById(memberContext.getId());
+
+    if(profileImgDelete != null && profileImgDelete.equals("Y")) {
+      memberService.removeProfileImg(member); // 로컬환경에서 프로필 이미지 제거
+    }
 
     memberService.modify(member, profileImage);
 
