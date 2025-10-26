@@ -21,6 +21,10 @@ public class Member extends BaseEntity {
   private String email;
   private String profileImg;
 
+  public Member(long id) {
+    super(id);
+  }
+
   public String getProfileImgUrl() {
     if(profileImg == null) return null;
 

@@ -27,8 +27,14 @@ public class BaseEntity {
   @Id
   @GeneratedValue(strategy = IDENTITY)
   private Long id;
+
   @CreatedDate
   private LocalDateTime createDate; // LocalDateTime.NOW() 가 알아서 들어감
+
   @LastModifiedDate
   private LocalDateTime modifyDate;
+
+  public BaseEntity(long id) {
+    this.id = id;
+  }
 }

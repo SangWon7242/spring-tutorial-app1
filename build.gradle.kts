@@ -45,6 +45,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // QueryDSL 추가
     // Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
