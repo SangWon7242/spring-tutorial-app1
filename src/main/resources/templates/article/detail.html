@@ -47,23 +47,14 @@
         </div>
 
         <!-- Article Images -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8" th:if="${article.extra.genFileMap != null}">
-          <div class="rounded-lg overflow-hidden shadow-lg h-64 md:h-80"
-               th:if="${article.extra.genFileMap.get('common\_\_inBody\_\_1') != null}">
-            <img th:src="|${article.extra.genFileMap.common\_\_inBody\_\_1.url}|"
-                 alt="게시물 이미지 1"
-                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-          </div>
-
-          <div class="rounded-lg overflow-hidden shadow-lg h-64 md:h-80"
-               th:if="${article.extra.genFileMap.get('common\_\_inBody\_\_2') != null}">
-            <img th:src="|${article.extra.genFileMap.common\_\_inBody\_\_2.url}|"
-                 alt="게시물 이미지 2"
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8" th:if="${article.extra.genFileMap != null}">
+          <div class="rounded-lg overflow-hidden shadow-lg h-64 md:h-80" th:each="entry : ${article.extra.genFileMap}">
+            <img th:src="@{${entry.value.url}}"
+                 th:alt="${entry.key}"
                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
           </div>
         </div>
       </div>
-
 
       <!-- Action Buttons -->
       <div class="card-actions justify-end mt-8 pt-6 border-t">
