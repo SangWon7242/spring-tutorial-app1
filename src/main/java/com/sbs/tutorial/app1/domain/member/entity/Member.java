@@ -1,5 +1,6 @@
 package com.sbs.tutorial.app1.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sbs.tutorial.app1.base.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +17,10 @@ import lombok.experimental.SuperBuilder;
 public class Member extends BaseEntity {
   @Column(unique = true)
   private String username;
+  
+  @JsonIgnore // Json에서 비번 노출 방지
   private String password;
+  
   @Column(unique = true)
   private String email;
   private String profileImg;
