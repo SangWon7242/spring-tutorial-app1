@@ -24,8 +24,8 @@ public class DevInitData {
       memberService.setProfileImgByUrl(member2, "https://picsum.photos/200/300");
 
       Article article = articleService.write(member1, "제목1", "내용1");
-      articleService.addGenFileByUrl(article, "common", "inBody", 1, "https://picsum.photos/200/300");
-      articleService.addGenFileByUrl(article, "common", "inBody", 2, "https://picsum.photos/200/300");
+      articleService.addGenFileByUrl(article, "common", "inBody", 1, "https://picsum.photos/400/500");
+      articleService.addGenFileByUrl(article, "common", "inBody", 2, "https://picsum.photos/400/500");
     };
   }
 }
