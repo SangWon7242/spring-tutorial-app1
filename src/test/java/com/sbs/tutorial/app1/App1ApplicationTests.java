@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 // @Transactional : JUnit 테스트 코드가 실행되면, 이 메서드가 끝나고 DB가 자동으로 롤백되게끔
 @Transactional
-@ActiveProfiles({"base-addi", "test"})
+@ActiveProfiles("test")
 class App1ApplicationTests {
 
   @Autowired
