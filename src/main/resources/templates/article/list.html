@@ -1,0 +1,34 @@
+<html layout:decorate="~{layout/layout.html}">
+<body>
+<section class="article-list-section flex-1 my-10" layout:fragment="content">
+  <div class="container mx-auto">
+    <h1 class="text-3xl text-center my-10 font-bold">게시물 리스트</h1>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성날짜</th>
+            <th>작성자</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="article : ${articles}">
+            <td th:text="${article.id}"></td>
+            <td>
+              <a th:href="@{/article/detail/{id}(id=${article.id})}" th:text="${article.title}"></a>
+            </td>
+            <td th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${article.author.username}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</body>
+</html>
+
+
+

@@ -19,5 +19,4 @@ public class Article extends BaseEntity {
   private Member author;
   private String title;
   private String content;
-
 }

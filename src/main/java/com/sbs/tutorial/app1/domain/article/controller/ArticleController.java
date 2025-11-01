@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -64,7 +65,7 @@ public class ArticleController {
     return "redirect:/article/%d?msg=%s".formatted(article.getId(), msg);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/detail/{id}")
   public String showDetail(Model model, @PathVariable Long id) {
     Article article = articleService.getForPrintArticleById(id);
 
@@ -73,9 +74,29 @@ public class ArticleController {
     return "article/detail";
   }
 
+  @GetMapping("/list")
+  public String showList(Model model) {
+    List<Article> articles = articleService.getArticles();
+
+    if(articles.isEmpty()) {
+      String msg = "게시물이 존재하지 않습니다.";
+
+      // URL 파라미터에 한글을 사용하려면 URL 인코딩이 필요
+      msg = Ut.url.encode(msg);
+
+      return "redirect:/msg=%s".formatted(msg);
+    }
+
+    model.addAttribute("articles", articles);
+
+    return "article/list";
+  }
+
+  /*
   @GetMapping("/{id}/json/forDebug")
   @ResponseBody
   public Article showDetailJson(@PathVariable Long id) {
     return articleService.getForPrintArticleById(id);
   }
+  */
 }

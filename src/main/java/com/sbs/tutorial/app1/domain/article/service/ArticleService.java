@@ -8,6 +8,7 @@ import com.sbs.tutorial.app1.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -47,5 +48,9 @@ public class ArticleService {
     article.getExtra().put("genFileMap", genFileMap);
 
     return article;
+  }
+
+  public List<Article> getArticles() {
+    return articleRepository.findByOrderByIdDesc();
   }
 }

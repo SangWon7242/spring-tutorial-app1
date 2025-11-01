@@ -29,7 +29,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             // Chrome DevTools 경로 허용
             .requestMatchers("/.well-known/**").permitAll()
-            .requestMatchers("/", "/member/join", "/member/login", "/error").permitAll() // permitAll : 접속 허용
+            .requestMatchers("/", "/member/join", "/member/login", "/article/list/**", "/article/detail/**", "/error").permitAll() // permitAll : 접속 허용
             // 정적 리소스
             .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/gen/**", "/member/profile/img/**").permitAll()
             .anyRequest().authenticated() // 위 사항을 제외하고는 로그인 필요
