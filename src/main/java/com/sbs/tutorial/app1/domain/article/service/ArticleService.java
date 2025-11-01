@@ -1,13 +1,10 @@
 package com.sbs.tutorial.app1.domain.article.service;
 
 import com.sbs.tutorial.app1.domain.article.entity.Article;
-import com.sbs.tutorial.app1.domain.article.input.ArticleForm.ArticleForm;
 import com.sbs.tutorial.app1.domain.article.repository.ArticleRepository;
 import com.sbs.tutorial.app1.domain.fileUpload.service.GenFileService;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,5 +34,13 @@ public class ArticleService {
 
   public void addGenFileByUrl(Article article, String typeCode, String type2Code, int fileNo, String url) {
     genFileService.addGenFileByUrl("article", article.getId(), typeCode, type2Code, fileNo, url);
+  }
+
+  public Article getForPrintArticleById(Long id) {
+    Article article = getArticleById(id);
+
+    article.getExtra().put("age", 22);
+
+    return article;
   }
 }
