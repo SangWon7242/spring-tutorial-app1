@@ -44,6 +44,7 @@
         <div sec:authorize="isAuthenticated()">
           <ul class="flex h-full">
             <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
+            <li><a href="/article/list" class="flex h-full items-center px-5">게시물</a></li>
             <li class="flex">
               <span class="w-10 h-10 rounded-full overflow-hidden">
                 <img class="profile-img" th:src="${#authentication.principal.getProfileImgRedirectUrl()}" alt="프로필 이미지">

@@ -67,7 +67,7 @@
           목록으로
         </a>
 
-        <a href="#"
+        <a th:href="@{|/article/${article.id}/modify|}"
            class="btn btn-primary"
            sec:authorize="isAuthenticated()"
            th:if="${#authentication.principal.id == article.author.id}">

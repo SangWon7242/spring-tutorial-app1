@@ -11,6 +11,7 @@ import com.sbs.tutorial.app1.domain.fileUpload.service.GenFileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -90,6 +92,26 @@ public class ArticleController {
     model.addAttribute("articles", articles);
 
     return "article/list";
+  }
+
+  @PreAuthorize("isAuthenticated()")
+  @GetMapping("/{id}/modify")
+  public String showList(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id) {
+    Article article = articleService.getForPrintArticleById(id);
+
+    if(memberContext.getId() != article.getAuthor().getId()) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "게시물 수정 권한이 없습니다.");
+    }
+
+    model.addAttribute("article", article);
+
+    return "article/modify";
+  }
+
+  @PreAuthorize("isAuthenticated()")
+  @PostMapping("/{id}/modify")
+  public String showList(Model model, @PathVariable Long id, @Valid ArticleForm articleForm) {
+    return "article/detail/%d".formatted(id);
   }
 
   /*
