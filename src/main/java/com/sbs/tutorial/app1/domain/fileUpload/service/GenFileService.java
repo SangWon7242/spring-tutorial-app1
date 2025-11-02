@@ -6,8 +6,8 @@ import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
 import com.sbs.tutorial.app1.domain.fileUpload.repository.GenFileRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GenFileService {
   private final GenFileRepository genFileRepository;
 
@@ -42,13 +43,13 @@ public class GenFileService {
 
       String[] inputNameBits = inputName.split("__");
 
-      String typeCode = inputNameBits[0]; // 예 : bodyImg
-      String type2Code = inputNameBits[1]; // 1
-      String originFileName = multipartFile.getOriginalFilename();;
-      String fileExt = Ut.file.getExt(originFileName);;
+      String typeCode = inputNameBits[0]; // 예 : common
+      String type2Code = inputNameBits[1]; // inBody
+      String originFileName = multipartFile.getOriginalFilename();
+      String fileExt = Ut.file.getExt(originFileName);
       String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
       String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
-      int fileNo = Integer.parseInt(inputNameBits[2]);
+      int fileNo = Integer.parseInt(inputNameBits[2]); // 1
       int fileSize = (int) multipartFile.getSize();
 
       String fileDir = getCurrentDirName(relTypeCode);
@@ -166,5 +167,40 @@ public class GenFileService {
             (genFile1, genFile2) -> genFile1,
             LinkedHashMap::new
         ));
+  }
+
+  public void deleteFiles(Article article, Map<String, String> params) {
+    log.debug("params : {}", params);
+
+    List<String> deleteFilesArgs = params.keySet()
+        .stream()
+        .filter(key -> key.startsWith("delete___"))
+        .map(key -> key.replace("delete___", ""))
+        .collect(Collectors.toList());
+
+    deleteFiles(article, deleteFilesArgs);
+  }
+
+  private void deleteFiles(Article article, List<String> params) {
+    String relTypeCode = "article";
+    Long relId = article.getId();
+
+    params.stream()
+        .forEach(key -> {
+          String[] keyBits = key.split("__");
+
+          String typeCode = keyBits[0]; // common
+          String type2Code = keyBits[1]; // inBody
+          int fileNo = Integer.parseInt(keyBits[2]); // 1
+
+          Optional<GenFile> opGenFile = genFileRepository.findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
+
+          opGenFile.ifPresent(this::delete);
+        });
+  }
+
+  private void delete(GenFile genFile) {
+    deleteFileFromStorage(genFile); // 로컬에서 이미지 제거
+    genFileRepository.delete(genFile); // DB에서 제거
   }
 }

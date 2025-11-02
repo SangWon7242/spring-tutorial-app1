@@ -20,33 +20,29 @@
                   th:text="${article.content}"></textarea>
       </fieldset>
       <!-- Article Images -->
-      <h2 class="text-2xl font-bold">이미지 파일 수정</h2>
-
-      <th:block th:with="mapSize=${article.extra.genFileMap.size()}">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-          <th:block th:each="i : ${#numbers.sequence(1, mapSize)}"
-                    th:with="genFile=${article.extra.genFileMap.get('common\_\_inBody\_\_' + i)}">
+      <h2 class="text-2xl font-bold" th:if="${article.extra.genFileMap != null}">이미지 파일 수정</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        <th:block th:each="entry : ${article.extra.genFileMap}">
+          <th:block th:with="genFile=${entry.value}, fileNo=${T(java.lang.Integer).parseInt(entry.key.split('__')[2])}">
             <div class="flex flex-col gap-y-3">
-              <th:block th:if="${genFile != null}">
-                <div class="text-[14px] flex justify-between">
-                  <span th:text="|${i}번 이미지|"></span>
-                  <label class="badge badge-primary cursor-pointer" type="checkbox" value="" th:name="|delete___common\_\_inBody\_\_${i}|">
-                    <span>이미지 삭제</span>
-                  </label>
-                </div>
-                <div class="flex flex-col gap-y-2 h-100">
-                  <a th:href="${genFile.url}" target="_blank" class="rounded-lg overflow-hidden">
-                    <img th:src="${genFile.url}"
-                         th:alt="|이미지${i}|"
-                         class="w-full h-full object-cover">
-                  </a>
-                  <input type="file" th:name="|common\_\_inBody\_\_${i}|" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
-                </div>
-              </th:block>
+              <div class="text-[14px] flex justify-end">
+                <label class="cursor-pointer">
+                  <span class="badge badge-primary">이미지 삭제</span>
+                  <input class="checkbox" type="checkbox" value="Y" th:name="|delete___common\_\_inBody\_\_${fileNo}|">
+                </label>
+              </div>
+              <div class="flex flex-col gap-y-2 h-100">
+                <a th:href="${genFile.url}" target="_blank" class="rounded-lg overflow-hidden">
+                  <img th:src="${genFile.url}"
+                       th:alt="|이미지${fileNo}|"
+                       class="w-full h-full object-cover">
+                </a>
+                <input type="file" th:name="|common\_\_inBody\_\_${fileNo}|" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+              </div>
             </div>
           </th:block>
-        </div>
-      </th:block>
+        </th:block>
+      </div>
       <div class="mt-2">
         <button type="submit" class="btn btn-neutral">수정</button>
       </div>

@@ -17,10 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.server.ResponseStatusException;
@@ -49,7 +46,7 @@ public class ArticleController {
                       MultipartRequest multipartRequest,
                       BindingResult bindingResult) {
 
-    if(bindingResult.hasErrors()) {
+    if (bindingResult.hasErrors()) {
       return "article/write";
     }
 
@@ -62,7 +59,7 @@ public class ArticleController {
     // log.debug("saveFilesRsData : {}", saveFilesRsData);
 
     String msg = "%d번 게시물이 작성되었습니다.".formatted(article.getId());
-    
+
     // URL 파라미터에 한글을 사용하려면 URL 인코딩이 필요
     msg = Ut.url.encode(msg);
 
@@ -82,7 +79,7 @@ public class ArticleController {
   public String showList(Model model) {
     List<Article> articles = articleService.getArticles();
 
-    if(articles.isEmpty()) {
+    if (articles.isEmpty()) {
       String msg = "게시물이 존재하지 않습니다.";
 
       // URL 파라미터에 한글을 사용하려면 URL 인코딩이 필요
@@ -101,7 +98,7 @@ public class ArticleController {
   public String showModify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id) {
     Article article = articleService.getForPrintArticleById(id);
 
-    if(memberContext.getId() != article.getAuthor().getId()) {
+    if (memberContext.getId() != article.getAuthor().getId()) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "게시물 수정 권한이 없습니다.");
     }
 
@@ -113,19 +110,21 @@ public class ArticleController {
   @PreAuthorize("isAuthenticated()")
   @PostMapping("/{id}/modify")
   public String modify(@AuthenticationPrincipal MemberContext memberContext,
-                         Model model,
-                         @PathVariable Long id,
-                         @Valid ArticleForm articleForm,
-                         MultipartRequest multipartRequest,
-                         BindingResult bindingResult) {
+                       Model model,
+                       @PathVariable Long id,
+                       @Valid ArticleForm articleForm,
+                       MultipartRequest multipartRequest,
+                       BindingResult bindingResult,
+                       @RequestParam Map<String, String> params
+  ) {
 
     Article article = articleService.getForPrintArticleById(id);
 
-    if(memberContext.getId() != article.getAuthor().getId()) {
+    if (memberContext.getId() != article.getAuthor().getId()) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "게시물 수정 권한이 없습니다.");
     }
 
-    if(bindingResult.hasErrors()) {
+    if (bindingResult.hasErrors()) {
       model.addAttribute("article", article);
       return "article/modify";
     }
@@ -133,12 +132,13 @@ public class ArticleController {
     articleService.modify(article, articleForm.getTitle(), articleForm.getContent());
 
     Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+    genFileService.deleteFiles(article, params);
+
     RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
     log.debug("saveFilesRsData : {}", saveFilesRsData);
-    
-    String msg = "%d번 게시물이 수정되었습니다.".formatted(article.getId());
 
-    // URL 파라미터에 한글을 사용하려면 URL 인코딩이 필요
+    String msg = "%d번 게시물이 수정되었습니다.".formatted(article.getId());
     msg = Ut.url.encode(msg);
 
     return "redirect:/article/detail/%d?msg=%s".formatted(article.getId(), msg);
