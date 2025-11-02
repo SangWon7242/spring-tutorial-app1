@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout/layout.html}">
 <body>
-<section class="article-modify-section" layout:fragment="content">
+<section class="article-modify-section my-10" layout:fragment="content">
   <div class="container mx-auto">
     <form th:action method="POST" enctype="multipart/form-data" onsubmit="ModifyForm__submit(this); return false;">
       <fieldset class="fieldset">
@@ -26,7 +26,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
           <th:block th:each="i : ${#numbers.sequence(1, mapSize)}"
                     th:with="genFile=${article.extra.genFileMap.get('common\_\_inBody\_\_' + i)}">
-            <div class="h-64 md:h-80 flex flex-col gap-y-3">
+            <div class="flex flex-col gap-y-3">
               <th:block th:if="${genFile != null}">
                 <div class="text-[14px] flex justify-between">
                   <span th:text="|${i}번 이미지|"></span>
@@ -34,12 +34,13 @@
                     <span>이미지 삭제</span>
                   </label>
                 </div>
-                <div class="rounded-lg overflow-hidden">
-                  <a th:href="${genFile.url}" target="_blank">
+                <div class="flex flex-col gap-y-2 h-100">
+                  <a th:href="${genFile.url}" target="_blank" class="rounded-lg overflow-hidden">
                     <img th:src="${genFile.url}"
                          th:alt="|이미지${i}|"
                          class="w-full h-full object-cover">
                   </a>
+                  <input type="file" th:name="|common\_\_inBody\_\_${i}|" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
                 </div>
               </th:block>
             </div>

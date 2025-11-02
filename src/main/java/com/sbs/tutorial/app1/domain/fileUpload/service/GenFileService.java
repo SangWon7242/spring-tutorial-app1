@@ -6,6 +6,7 @@ import com.sbs.tutorial.app1.base.util.Ut;
 import com.sbs.tutorial.app1.domain.article.entity.Article;
 import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
 import com.sbs.tutorial.app1.domain.fileUpload.repository.GenFileRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,7 +68,7 @@ public class GenFileService {
           .originFileName(originFileName)
           .build();
 
-      genFileRepository.save(genFile); // DB 저장
+      genFile = save(genFile);
 
       String filePath = AppConfig.GEN_FILE_DIR_PATH + "/" + fileDir + "/" + genFile.getFileName();
 
@@ -84,6 +85,29 @@ public class GenFileService {
     }
 
     return new RsData<>("S-1", "파일을 업로드했습니다.", genFileIds);
+  }
+
+  public GenFile save(GenFile genFile) {
+    Optional<GenFile> existGenFile = genFileRepository.findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(genFile.getRelTypeCode(), genFile.getRelId(), genFile.getTypeCode(), genFile.getType2Code(), genFile.getFileNo());
+
+    if(existGenFile.isPresent()) {
+      GenFile oldGenFile = existGenFile.get();
+      deleteFileFromStorage(oldGenFile);
+
+      oldGenFile.merge(genFile);
+
+      genFileRepository.save(genFile);
+      return oldGenFile;
+    }
+
+    genFileRepository.save(genFile);
+
+    return genFile;
+  }
+  
+  // 기존 파일 제거
+  private void deleteFileFromStorage(GenFile oldGenFile) {
+    new File(oldGenFile.getFilePath()).delete();
   }
 
   public void addGenFileByUrl(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, String url) {
@@ -121,7 +145,7 @@ public class GenFileService {
         .originFileName(originFileName)
         .build();
 
-    genFileRepository.save(genFile);
+    genFile = save(genFile);
 
     String filePath = AppConfig.GEN_FILE_DIR_PATH + "/" + fileDir + "/" + genFile.getFileName();
 

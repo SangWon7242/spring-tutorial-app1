@@ -1,6 +1,7 @@
 package com.sbs.tutorial.app1.domain.fileUpload.entity;
 
 
+import com.sbs.tutorial.app1.base.config.base.AppConfig;
 import com.sbs.tutorial.app1.base.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.*;
@@ -32,5 +33,23 @@ public class GenFile extends BaseEntity {
 
   public String getUrl() {
     return "/gen/" + getFileDir() + "/" + getFileName();
+  }
+
+  public void merge(GenFile other) {
+    relTypeCode = other.getRelTypeCode();
+    relId = other.getRelId();
+    typeCode = other.getTypeCode();
+    type2Code = other.getType2Code();
+    fileExtTypeCode = other.getFileExtTypeCode();
+    fileExtType2Code = other.getFileExtType2Code();
+    fileSize = other.getFileSize();
+    fileNo = other.getFileNo();
+    fileExt = other.getFileExt();
+    fileDir = other.getFileDir();
+    originFileName = other.getOriginFileName();
+  }
+
+  public String getFilePath() {
+    return AppConfig.GEN_FILE_DIR_PATH + "/" + getFileDir() + "/" + getFileName();
   }
 }

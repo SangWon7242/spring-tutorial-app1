@@ -17,11 +17,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -57,7 +59,7 @@ public class ArticleController {
 
     RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
 
-    log.debug("saveFilesRsData : {}", saveFilesRsData);
+    // log.debug("saveFilesRsData : {}", saveFilesRsData);
 
     String msg = "%d번 게시물이 작성되었습니다.".formatted(article.getId());
     
@@ -96,7 +98,7 @@ public class ArticleController {
 
   @PreAuthorize("isAuthenticated()")
   @GetMapping("/{id}/modify")
-  public String showList(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id) {
+  public String showModify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id) {
     Article article = articleService.getForPrintArticleById(id);
 
     if(memberContext.getId() != article.getAuthor().getId()) {
@@ -110,10 +112,11 @@ public class ArticleController {
 
   @PreAuthorize("isAuthenticated()")
   @PostMapping("/{id}/modify")
-  public String showList(@AuthenticationPrincipal MemberContext memberContext,
+  public String modify(@AuthenticationPrincipal MemberContext memberContext,
                          Model model,
                          @PathVariable Long id,
                          @Valid ArticleForm articleForm,
+                         MultipartRequest multipartRequest,
                          BindingResult bindingResult) {
 
     Article article = articleService.getForPrintArticleById(id);
@@ -128,6 +131,10 @@ public class ArticleController {
     }
 
     articleService.modify(article, articleForm.getTitle(), articleForm.getContent());
+
+    Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+    RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
+    log.debug("saveFilesRsData : {}", saveFilesRsData);
     
     String msg = "%d번 게시물이 수정되었습니다.".formatted(article.getId());
 
