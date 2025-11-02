@@ -18,12 +18,13 @@
     </fieldset>
     <div class="flex flex-col gap-2">
       <p>본문 이미지</p>
-      <div>
-        <input type="file" name="common__inBody__1" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
-      </div>
-      <div>
-        <input type="file" name="common__inBody__2" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
-      </div>
+
+      <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+        <div class="flex flex-col">
+          <span th:text="|${i}번 이미지|" class="text-[14px]"></span>
+          <input type="file" th:name="|common\_\_inBody\_\_${i}|" class="file-input" accept="image/jpeg, image/jpg, image/png, image/gif, image/webp">
+        </div>
+      </th:block>
       <div>
         <button type="button" class="btn btn-primary">이미지 더 첨부하기</button>
       </div>

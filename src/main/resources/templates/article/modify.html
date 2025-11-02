@@ -1,57 +1,76 @@
 <html layout:decorate="~{layout/layout.html}">
 <body>
 <section class="article-modify-section" layout:fragment="content">
-  <form th:action method="POST" enctype="multipart/form-data" onsubmit="ModifyForm__submit(this); return false;">
-    <fieldset class="fieldset">
-      <legend class="fieldset-legend">제목</legend>
-      <input
-          class="input"
-          type="text"
-          placeholder="제목을 입력해주세요."
-          title="input title"
-          name="title"
-          th:value="${article.title}"
-      />
-    </fieldset>
-    <fieldset class="fieldset">
-      <legend class="fieldset-legend">내용</legend>
-      <textarea class="textarea h-24" placeholder="내용을 입력해주세요." name="content" th:text="${article.content}"></textarea>
-    </fieldset>
-    <!-- Article Images -->
-    <h2 class="text-2xl font-bold">이미지 파일 수정</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8" th:if="${article.extra.genFileMap != null}">
-      <div class="rounded-lg overflow-hidden shadow-lg h-64 md:h-80" th:each="entry : ${article.extra.genFileMap}">
-        <img th:src="@{${entry.value.url}}"
-             th:alt="${entry.key}"
-             class="w-full h-full object-cover">
+  <div class="container mx-auto">
+    <form th:action method="POST" enctype="multipart/form-data" onsubmit="ModifyForm__submit(this); return false;">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">제목</legend>
+        <input
+            class="input"
+            type="text"
+            placeholder="제목을 입력해주세요."
+            title="input title"
+            name="title"
+            th:value="${article.title}"
+        />
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">내용</legend>
+        <textarea class="textarea h-24" placeholder="내용을 입력해주세요." name="content"
+                  th:text="${article.content}"></textarea>
+      </fieldset>
+      <!-- Article Images -->
+      <h2 class="text-2xl font-bold">이미지 파일 수정</h2>
+
+      <th:block th:with="mapSize=${article.extra.genFileMap.size()}">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+          <th:block th:each="i : ${#numbers.sequence(1, mapSize)}"
+                    th:with="genFile=${article.extra.genFileMap.get('common\_\_inBody\_\_' + i)}">
+            <div class="h-64 md:h-80 flex flex-col gap-y-3">
+              <th:block th:if="${genFile != null}">
+                <div class="text-[14px] flex justify-between">
+                  <span th:text="|${i}번 이미지|"></span>
+                  <label class="badge badge-primary cursor-pointer" type="checkbox" value="" th:name="|delete___common\_\_inBody\_\_${i}|">
+                    <span>이미지 삭제</span>
+                  </label>
+                </div>
+                <div class="rounded-lg overflow-hidden">
+                  <a th:href="${genFile.url}" target="_blank">
+                    <img th:src="${genFile.url}"
+                         th:alt="|이미지${i}|"
+                         class="w-full h-full object-cover">
+                  </a>
+                </div>
+              </th:block>
+            </div>
+          </th:block>
+        </div>
+      </th:block>
+      <div class="mt-2">
+        <button type="submit" class="btn btn-neutral">수정</button>
       </div>
-    </div>
-    <div class="mt-2">
-      <button type="submit" class="btn btn-neutral">수정</button>
-    </div>
-  </form>
+    </form>
+  </div>
+  <script>
+    function ModifyForm__submit(form) {
+      form.title.value = form.title.value.trim();
+      if(form.title.value.length === 0) {
+        alert("제목을 입력해주세요.");
+        form.title.focus();
+        return;
+      }
 
-<script>
-  function ModifyForm__submit(form) {
-    form.title.value = form.title.value.trim();
-    if(form.title.value.length === 0) {
-      alert("제목을 입력해주세요.");
-      form.title.focus();
-      return;
+      form.content.value = form.content.value.trim();
+      if(form.content.value.length === 0) {
+        alert("내용을 입력해주세요.");
+        form.content.focus();
+        return;
+      }
+
+      // 모든 유효성 검사를 통과하면 폼 제출
+      form.submit();
     }
-
-    form.content.value = form.content.value.trim();
-    if(form.content.value.length === 0) {
-      alert("내용을 입력해주세요.");
-      form.content.focus();
-      return;
-    }
-
-    // 모든 유효성 검사를 통과하면 폼 제출
-    form.submit();
-  }
-</script>
-
+  </script>
 </section>
 </body>
 </html>
