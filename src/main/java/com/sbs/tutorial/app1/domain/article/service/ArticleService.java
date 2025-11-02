@@ -5,6 +5,7 @@ import com.sbs.tutorial.app1.domain.article.repository.ArticleRepository;
 import com.sbs.tutorial.app1.domain.fileUpload.entity.GenFile;
 import com.sbs.tutorial.app1.domain.fileUpload.service.GenFileService;
 import com.sbs.tutorial.app1.domain.member.entity.Member;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,11 @@ public class ArticleService {
 
   public List<Article> getArticles() {
     return articleRepository.findByOrderByIdDesc();
+  }
+
+  public void modify(Article article, String title, String content) {
+    article.setTitle(title);
+    article.setContent(content);
+    articleRepository.save(article);
   }
 }

@@ -110,8 +110,31 @@ public class ArticleController {
 
   @PreAuthorize("isAuthenticated()")
   @PostMapping("/{id}/modify")
-  public String showList(Model model, @PathVariable Long id, @Valid ArticleForm articleForm) {
-    return "article/detail/%d".formatted(id);
+  public String showList(@AuthenticationPrincipal MemberContext memberContext,
+                         Model model,
+                         @PathVariable Long id,
+                         @Valid ArticleForm articleForm,
+                         BindingResult bindingResult) {
+
+    Article article = articleService.getForPrintArticleById(id);
+
+    if(memberContext.getId() != article.getAuthor().getId()) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "게시물 수정 권한이 없습니다.");
+    }
+
+    if(bindingResult.hasErrors()) {
+      model.addAttribute("article", article);
+      return "article/modify";
+    }
+
+    articleService.modify(article, articleForm.getTitle(), articleForm.getContent());
+    
+    String msg = "%d번 게시물이 수정되었습니다.".formatted(article.getId());
+
+    // URL 파라미터에 한글을 사용하려면 URL 인코딩이 필요
+    msg = Ut.url.encode(msg);
+
+    return "redirect:/article/detail/%d?msg=%s".formatted(article.getId(), msg);
   }
 
   /*
