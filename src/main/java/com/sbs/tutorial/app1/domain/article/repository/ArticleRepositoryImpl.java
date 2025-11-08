@@ -16,7 +16,7 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
   public List<Article> getQslArticleOrderByIdDesc() {
     return jpaQueryFactory
         .selectFrom(article) // SELECT * FROM article
-        .orderBy(article.id.desc())
+        .orderBy(article.id.desc()) // ORDER BY id DESC;
         .fetch();
   }
 }

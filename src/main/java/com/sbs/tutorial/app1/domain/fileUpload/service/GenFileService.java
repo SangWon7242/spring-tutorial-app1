@@ -203,4 +203,15 @@ public class GenFileService {
     deleteFileFromStorage(genFile); // 로컬에서 이미지 제거
     genFileRepository.delete(genFile); // DB에서 제거
   }
+
+  public void deleteAllFilesByArticle(Article article) {
+    String relTypeCode = "article";
+    Long relId = article.getId();
+
+    List<GenFile> genFiles = genFileRepository.findByRelTypeCodeAndRelIdOrderByTypeCodeAscType2CodeAscFileNoAsc(relTypeCode, relId);
+
+    for(GenFile genFile : genFiles) {
+      delete(genFile);
+    }
+  }
 }

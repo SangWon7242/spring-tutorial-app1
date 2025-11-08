@@ -14,7 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- DaisyUI 불러오기 -->
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
 
   <!-- tailwind CSS 불러오기 -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -23,60 +23,62 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="min-h-screen flex flex-col">
-  <header class="top-bar shadow-sm bg-white">
-    <div class="container mx-auto h-20 flex items-center">
-      <div class="logo-box">
-        <a href="/" class="logo font-bold text-2xl">
-          Spring Boot App
-        </a>
+<header class="top-bar shadow-sm bg-white">
+  <div class="container mx-auto h-20 flex items-center">
+    <div class="logo-box">
+      <a href="/" class="logo font-bold text-2xl">
+        Spring Boot App
+      </a>
+    </div>
+    <nav class="menu-1 ml-auto">
+      <!-- isAnonymous() : 로그인 하지 않은 상태 -->
+      <div sec:authorize="isAnonymous()">
+        <ul class="flex h-full">
+          <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
+          <li><a href="/article/list" class="flex h-full items-center px-5">게시물</a></li>
+          <li><a href="/member/login" class="flex h-full items-center px-5">로그인</a></li>
+          <li><a href="/member/join" class="flex h-full items-center px-5">회원가입</a></li>
+        </ul>
       </div>
-      <nav class="menu-1 ml-auto">
-        <!-- isAnonymous() : 로그인 하지 않은 상태 -->
-        <div sec:authorize="isAnonymous()">
-          <ul class="flex h-full">
-            <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
-            <li><a href="/article/list" class="flex h-full items-center px-5">게시물</a></li>
-            <li><a href="/member/login" class="flex h-full items-center px-5">로그인</a></li>
-            <li><a href="/member/join" class="flex h-full items-center px-5">회원가입</a></li>
-          </ul>
-        </div>
-        <!-- isAuthenticated() : 로그인 된 상태 -->
-        <div sec:authorize="isAuthenticated()">
-          <ul class="flex h-full">
-            <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
-            <li><a href="/article/list" class="flex h-full items-center px-5">게시물</a></li>
-            <li class="flex">
+      <!-- isAuthenticated() : 로그인 된 상태 -->
+      <div sec:authorize="isAuthenticated()">
+        <ul class="flex h-full">
+          <li><a href="/article/write" class="flex h-full items-center px-5">글 작성</a></li>
+          <li><a href="/article/list" class="flex h-full items-center px-5">게시물</a></li>
+          <li class="flex">
               <span class="w-10 h-10 rounded-full overflow-hidden">
                 <img class="profile-img" th:src="${#authentication.principal.getProfileImgRedirectUrl()}" alt="프로필 이미지">
               </span>
-              <span class="flex h-full items-center px-5" th:text="|'${#authentication.principal.username}' 님|"></span>
-            </li>
-            <li>
-              <a onclick="this.nextElementSibling.submit();" class="flex h-full items-center px-5 cursor-pointer">로그아웃</a>
-              <form action="/member/logout" method="POST" hidden></form>
-            </li>
-            <li><a href="/member/profile" class="flex h-full items-center px-5">마이페이지</a></li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-  </header>
+            <span class="flex h-full items-center px-5" th:text="|'${#authentication.principal.username}' 님|"></span>
+          </li>
+          <li>
+            <a onclick="this.nextElementSibling.submit();" class="flex h-full items-center px-5 cursor-pointer">로그아웃</a>
+            <form action="/member/logout" method="POST" hidden></form>
+          </li>
+          <li><a href="/member/profile" class="flex h-full items-center px-5">마이페이지</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
 
-  <main class="content-wrap flex-1 flex flex-col">
-    <section layout:fragment="content"></section>
-  </main>
+<main class="content-wrap flex-1 flex flex-col">
+  <section layout:fragment="content"></section>
+</main>
 
-  <footer class="footer-bar bg-[#ccc]">
-    <div class="container mx-auto h-20 flex items-center justify-center">
-      <p class="copyright">
-        Copyright © SpringBoot App. All rights reserved.
-      </p>
-    </div>
-  </footer>
+<footer class="footer-bar bg-[#ccc]">
+  <div class="container mx-auto h-20 flex items-center justify-center">
+    <p class="copyright">
+      Copyright © SpringBoot App. All rights reserved.
+    </p>
+  </div>
+</footer>
 
-  <script th:src="@{/js/script.js}"></script>
+<script th:src="@{/js/script.js}"></script>
 
-  <script th:inline="javascript">
+<script th:inline="javascript">
+
+  function showSuccessAlert() {
     const params = /*[[ ${param} ]]*/ null;
 
     if (params.msg) {
@@ -86,6 +88,28 @@
       url.searchParams.delete('msg');
       window.history.replaceState({}, document.title, url.pathname + url.search);
     }
-  </script>
+  }
+
+  showSuccessAlert();
+
+  function deleteArticle() {
+    const msg = '정말 삭제하시겠습니까?';
+
+    confirmModal(msg, function() {
+      document.getElementById('deleteForm').submit();
+
+      const params = /*[[ ${param} ]]*/ null;
+
+      if (params.msg) {
+        successModal(params.msg);
+
+        const url = new URL(window.location);
+        url.searchParams.delete('msg');
+
+        console.log(url);
+      }
+    });
+  }
+</script>
 </body>
 </html>

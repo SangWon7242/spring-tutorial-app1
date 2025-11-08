@@ -47,7 +47,8 @@
         </div>
 
         <!-- Article Images -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8" th:if="${article.extra.genFileMap != null}">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8"
+             th:if="${article.extra.genFileMap != null}">
           <div class="rounded-lg overflow-hidden shadow-lg h-64 md:h-80" th:each="entry : ${article.extra.genFileMap}">
             <img th:src="@{${entry.value.url}}"
                  th:alt="${entry.key}"
@@ -79,17 +80,20 @@
           수정하기
         </a>
 
-        <button
-            class="btn btn-error"
-            sec:authorize="isAuthenticated()"
-            th:if="${#authentication.principal.id == article.author.id}">
+        <a sec:authorize="isAuthenticated()"
+           th:if="${#authentication.principal.id == article.author.id}"
+           class="btn btn-error cursor-pointer"
+           href="javascript:void(0);"
+           onclick="deleteArticle()"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
           </svg>
           삭제하기
-        </button>
+        </a>
+        <form id="deleteForm" th:action="@{|/article/${article.id}/delete|}" method="POST" hidden></form>
       </div>
     </div>
   </div>

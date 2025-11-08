@@ -52,12 +52,19 @@ public class ArticleService {
   }
 
   public List<Article> getArticles() {
-    return articleRepository.findByOrderByIdDesc();
+    return articleRepository.getQslArticleOrderByIdDesc();
   }
 
   public void modify(Article article, String title, String content) {
     article.setTitle(title);
     article.setContent(content);
     articleRepository.save(article);
+  }
+
+  public void delete(Article article) {
+    // 게시물과 관련된 모든 파일을 먼저 삭제
+    genFileService.deleteAllFilesByArticle(article);
+    
+    articleRepository.delete(article);
   }
 }
